@@ -1,4 +1,4 @@
-#include "StreamHttpReply.h"
+#include "StreamHttpReply.hpp"
 
 #include <Arduino.h>
 

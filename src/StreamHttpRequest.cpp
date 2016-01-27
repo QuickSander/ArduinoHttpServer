@@ -6,9 +6,9 @@
 //  Copyright (c) 2016 Sander van Woensel. All rights reserved.
 //
 
-#include "StreamHttpRequest.h"
+#include "StreamHttpRequest.hpp"
 
-#include "internals/HttpField.h"
+#include "internals/HttpField.hpp"
 #include "internals/Debug.h"
 
 #include <Arduino.h>

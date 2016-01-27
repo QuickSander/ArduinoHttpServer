@@ -1,4 +1,4 @@
-#include "HttpResource.h"
+#include "HttpResource.hpp"
 
 ArduinoHttpServer::HttpResource::HttpResource(const String& resource) :
    m_resource(resource)
