@@ -9,8 +9,8 @@
 #ifndef __ArduinoHttpServer__StreamHttpRequest__
 #define __ArduinoHttpServer__StreamHttpRequest__
 
-#include "internals/HttpResource.hpp"
-#include "internals/HttpField.hpp"
+#include "HttpResource.hpp"
+#include "HttpField.hpp"
 
 #include <Arduino.h>
 

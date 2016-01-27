@@ -8,8 +8,8 @@
 
 #include "StreamHttpRequest.hpp"
 
-#include "internals/HttpField.hpp"
-#include "internals/Debug.h"
+#include "HttpField.hpp"
+#include "Debug.h"
 
 #include <Arduino.h>
 
