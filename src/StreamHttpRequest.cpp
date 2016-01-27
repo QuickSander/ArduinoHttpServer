@@ -8,9 +8,11 @@
 
 #include "StreamHttpRequest.h"
 
-#include "HttpField.h"
-#include "Arduino.h"
-#include "Debug.h"
+#include "internals/HttpField.h"
+#include "internals/Debug.h"
+
+#include <Arduino.h>
+
 
 ArduinoHttpServer::StreamHttpRequest::StreamHttpRequest(Stream& stream) :
     m_stream(stream),
@@ -39,7 +41,6 @@ bool ArduinoHttpServer::StreamHttpRequest::readRequest()
    while(!m_stream.available())
    {
       // Quit when failed to retrieve data after n retries.
-      // We fallback to the mainloop which will attempt to wait for a new client.
       if(attempts >= MAX_RETRIES_WAIT_DATA_AVAILABLE)
       {
          setError("Time out while waiting for data to become available.");

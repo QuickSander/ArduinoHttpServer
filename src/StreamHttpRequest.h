@@ -9,9 +9,10 @@
 #ifndef __ArduinoHttpServer__StreamHttpRequest__
 #define __ArduinoHttpServer__StreamHttpRequest__
 
-#include "HttpResource.h"
-#include "HttpField.h"
-#include "Arduino.h"
+#include "internals/HttpResource.h"
+#include "internals/HttpField.h"
+
+#include <Arduino.h>
 
 namespace ArduinoHttpServer
 {

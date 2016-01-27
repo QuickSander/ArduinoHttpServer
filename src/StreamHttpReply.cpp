@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-#include "Debug.h"
+#include "internals/Debug.h"
 
 //------------------------------------------------------------------------------
 //                             Class Definition
