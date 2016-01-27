@@ -1,0 +1,13 @@
+StreamHttpRequest	KEYWORD1
+readRequest		KEYWORD2
+getResource		KEYWORD2
+getMethod		KEYWORD2
+getContentType		KEYWORD2
+getContentLength	KEYWORD2
+getBody			KEYWORD2
+getErrorDescription	KEYWORD2
+getStream		KEYWORD2
+StreamHttpReply		KEYWORD1
+StreamHttpErrorReply	KEYWORD1
+send			KEYWORD2
+getCode			KEYWORD2
