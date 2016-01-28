@@ -1,10 +1,11 @@
 //
-//  StreamHttpReply.h
+//! \file
 //  ArduinoHttpServer
 //
 //  Created by Sander van Woensel on 23-01-16.
 //  Copyright (c) 2016 Sander van Woensel. All rights reserved.
 //
+//! HTTP reply printed to Stream.
 
 #ifndef __ArduinoHttpServer__StreamHttpReply__
 #define __ArduinoHttpServer__StreamHttpReply__

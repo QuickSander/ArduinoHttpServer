@@ -1,9 +1,9 @@
 //
-//  HttpResource.h
+//! \file
 //  WifiESP8266SmartSwitch
 //
 //  Created by Sander van Woensel on 24-02-15.
-//  Copyright (c) 2015 Sander van Woensel. All rights reserved.
+//  Copyright (c) 2016 Sander van Woensel. All rights reserved.
 //
 
 #ifndef __ArduinoHttpServer__HttpResource__

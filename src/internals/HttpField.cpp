@@ -1,3 +1,12 @@
+//
+//! \file
+//  ArduinoHttpServer
+//
+//  Created by Sander van Woensel on 20-01-16.
+//  Copyright (c) 2016 Sander van Woensel. All rights reserved.
+//
+//! A single header field.
+
 #include "HttpField.hpp"
 #include "Debug.h"
 

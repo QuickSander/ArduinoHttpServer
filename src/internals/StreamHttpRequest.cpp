@@ -1,10 +1,11 @@
 //
-//  StreamHttpRequest.h
+//! \file
 //  ArduinoHttpServer
 //
 //  Created by Sander van Woensel on 23-01-16.
 //  Copyright (c) 2016 Sander van Woensel. All rights reserved.
 //
+//! HTTP Request based on Stream
 
 #include "StreamHttpRequest.hpp"
 
@@ -13,10 +14,14 @@
 
 #include <Arduino.h>
 
+//------------------------------------------------------------------------------
+//                             Class Definition
+//------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------
+//! \brief Constructor. sets Stream timeout for reading data.
 ArduinoHttpServer::StreamHttpRequest::StreamHttpRequest(Stream& stream) :
     m_stream(stream),
-    m_currentLine({0}),
     m_body({0}),
     m_method(METHOD_INVALID),
     m_resource(),
@@ -28,10 +33,14 @@ ArduinoHttpServer::StreamHttpRequest::StreamHttpRequest(Stream& stream) :
     m_stream.setTimeout(LINE_READ_TIMEOUT_MS);
 }
 
+//------------------------------------------------------------------------------
+//! \brief Does nothing.
 ArduinoHttpServer::StreamHttpRequest::~StreamHttpRequest()
 {
 }
 
+//------------------------------------------------------------------------------
+//! \brief Wait for data to become available on Stream and parses the request.
 bool ArduinoHttpServer::StreamHttpRequest::readRequest()
 {
 
@@ -87,7 +96,10 @@ bool ArduinoHttpServer::StreamHttpRequest::readRequest()
    return m_result == RESULT_OK;
 }
 
-bool ArduinoHttpServer::StreamHttpRequest::readLine(char linebuffer[])
+
+//------------------------------------------------------------------------------
+//! \brief Read a single line from Stream into _linebuffer_
+bool ArduinoHttpServer::StreamHttpRequest::readLine(char linebuffer[MAX_LINE_SIZE])
 {
     if(m_result!=RESULT_OK) { return false; }
 
@@ -106,6 +118,8 @@ bool ArduinoHttpServer::StreamHttpRequest::readLine(char linebuffer[])
     return bytesRead > 0 ;
 }
 
+//------------------------------------------------------------------------------
+//! \brief Parse first line of HTTP request.
 void ArduinoHttpServer::StreamHttpRequest::parseRequest(char lineBuffer[])
 {
     parseMethod(lineBuffer);
@@ -197,27 +211,6 @@ void ArduinoHttpServer::StreamHttpRequest::parseField(char lineBuffer[])
    {
       // Ignore other fields.
    }
-}
-
-const ArduinoHttpServer::HttpResource& ArduinoHttpServer::StreamHttpRequest::getResource() const
-{
-    return m_resource;
-}
-
-const ArduinoHttpServer::StreamHttpRequest::MethodEnum ArduinoHttpServer::StreamHttpRequest::getMethod()
-{
-    return m_method;
-}
-
-const String& ArduinoHttpServer::StreamHttpRequest::getContentType()
-{
-   // Conversion operator translates HttpField into const String&
-   return static_cast<const String&>(m_contentTypeField);
-}
-
-const int ArduinoHttpServer::StreamHttpRequest::getContentLength()
-{
-   return static_cast<int>(m_contentLengthField);
 }
 
 const char * const ArduinoHttpServer::StreamHttpRequest::getBody()

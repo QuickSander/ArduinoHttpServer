@@ -1,10 +1,11 @@
 //
-//  HttpField.h
-//  WifiESP8266SmartSwitch
+//! \file
+//  ArduinoHttpServer
 //
 //  Created by Sander van Woensel on 20-01-16.
-//  Copyright (c) 2015 Sander van Woensel. All rights reserved.
+//  Copyright (c) 2016 Sander van Woensel. All rights reserved.
 //
+//! A single header field.
 
 #ifndef __ArduinoHttpServer__HttpField__
 #define __ArduinoHttpServer__HttpField__
@@ -37,8 +38,8 @@ public:
 
    const TypeEnum getType() const;
 
-   inline operator const String&() const { return m_value; }
-   inline operator int() const { return m_value.toInt(); }
+   inline const String& getValueAsString() const {return m_value; };
+   inline const int getValueAsInt() const {return m_value.toInt(); };
 
 private:
    void determineType(const String& typeStr);

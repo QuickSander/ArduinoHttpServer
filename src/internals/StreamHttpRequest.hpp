@@ -1,10 +1,11 @@
 //
-//  StreamHttpRequest.h
-//  WifiPhotoCellSensor
+//! \file
+//  ArduinoHttpServer
 //
 //  Created by Sander van Woensel on 24-02-15.
 //  Copyright (c) 2015 Sander van Woensel. All rights reserved.
 //
+//! HTTP Request read from Stream.
 
 #ifndef __ArduinoHttpServer__StreamHttpRequest__
 #define __ArduinoHttpServer__StreamHttpRequest__
@@ -17,13 +18,15 @@
 namespace ArduinoHttpServer
 {
 
+//------------------------------------------------------------------------------
+//                             Class Declaration
+//------------------------------------------------------------------------------
 //! HTTP request read from a _Stream_.
 class StreamHttpRequest
 {
 
 public:
     enum MethodEnum {METHOD_INVALID, METHOD_GET, METHOD_PUT, METHOD_POST};
-
 
     StreamHttpRequest(Stream& stream);
 
@@ -32,12 +35,13 @@ public:
     bool readRequest();
 
     // Header retrieval methods.
-    const ArduinoHttpServer::HttpResource& getResource() const;
-    const MethodEnum getMethod();
+    inline const ArduinoHttpServer::HttpResource& getResource() const { return m_resource; };
+    inline const MethodEnum getMethod() const { return m_method; };
+    inline const String& getVersion() const { return m_version; };
 
     // Field retrieval methods.
-    const String& getContentType();
-    const int getContentLength();
+    inline const String& getContentType() const { m_contentTypeField.getValueAsInt(); };
+    inline const int getContentLength() const { m_contentLengthField.getValueAsInt(); };
 
     // Body retrieval methods.
     const char * const getBody();
@@ -48,31 +52,29 @@ public:
 
 private:
 
-    void parseRequest(char lineBuffer[]);
-    void parseMethod(char lineBuffer[]);
+   enum ResultEnum {RESULT_ERROR, RESULT_OK};
+
+   static const int MAX_LINE_SIZE = 255+1;
+   static const int MAX_BODY_LENGTH = 1023;
+   static const int MAX_BODY_SIZE = MAX_BODY_LENGTH+1; //!< Byte size of array. Leaves space for terminating \0.
+   static const long LINE_READ_TIMEOUT_MS = 10000L; //!< [ms] Wait 10s for reception of a complete line.
+   static const int MAX_RETRIES_WAIT_DATA_AVAILABLE = 255;
+
+    void parseRequest(char lineBuffer[MAX_LINE_SIZE]);
+    void parseMethod(char lineBuffer[MAX_LINE_SIZE]);
     void parseResource();
     void parseVersion();
 
-    void parseField(char lineBuffer[]);
+    void parseField(char lineBuffer[MAX_LINE_SIZE]);
 
     void neglectToken();
 
-    bool readLine(char lineBuffer[]);
+    bool readLine(char lineBuffer[MAX_LINE_SIZE]);
 
     void setError(const String& errorMessage);
 
-
-    enum ResultEnum {RESULT_ERROR, RESULT_OK};
-
-    static const int MAX_LINE_SIZE = 255+1;
-    static const int MAX_BODY_LENGTH = 1023;
-    static const int MAX_BODY_SIZE = MAX_BODY_LENGTH+1; //!< Byte size of array. Leaves space for terminating \0.
-    static const long LINE_READ_TIMEOUT_MS = 10000L; //!< [ms] Wait 10s for reception of a complete line.
-    static const int MAX_RETRIES_WAIT_DATA_AVAILABLE = 255;
-
     Stream& m_stream;
 
-    char m_currentLine[MAX_LINE_SIZE]; //!< \todo This can become a local variable.
     char m_body[MAX_BODY_SIZE];
 
     MethodEnum m_method;
@@ -89,4 +91,4 @@ private:
 
 }
 
-#endif /* defined(__ArduinoHttpServer__StreamHttpRequest__) */
+#endif // __ArduinoHttpServer__StreamHttpRequest__

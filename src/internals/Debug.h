@@ -1,3 +1,11 @@
+//
+//! \file
+//  ArduinoHttpServer
+//
+//  Created by Sander van Woensel on 20-01-16.
+//  Copyright (c) 2016 Sander van Woensel. All rights reserved.
+//
+//! Debug support
 
 #define ARDUINO_HTTP_SERVER_DEBUG
 

@@ -1,3 +1,12 @@
+//
+//! \file
+//  ArduinoHttpServer
+//
+//  Created by Sander van Woensel on 23-01-16.
+//  Copyright (c) 2016 Sander van Woensel. All rights reserved.
+//
+//! The URL/path provided after the HTTP method.
+
 #include "HttpResource.hpp"
 
 ArduinoHttpServer::HttpResource::HttpResource(const String& resource) :
