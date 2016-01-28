@@ -11,6 +11,10 @@
 #include "Debug.h"
 
 const char* ArduinoHttpServer::HttpField::SEPERATOR = ": ";
+const char* ArduinoHttpServer::HttpField::CONTENT_TYPE_STR = "Content-Type";
+const char* ArduinoHttpServer::HttpField::CONTENT_LENGTH_TYPE_STR = "Content-Length";
+const char* ArduinoHttpServer::HttpField::USER_AGENT_TYPE_STR = "User-Agent";
+
 
 ArduinoHttpServer::HttpField::HttpField(const char* fieldLine) :
    m_type(TYPE_NOT_SUPPORTED),
@@ -49,15 +53,15 @@ ArduinoHttpServer::HttpField::~HttpField()
 
 void ArduinoHttpServer::HttpField::determineType(const String& typeStr)
 {
-   if (typeStr.equalsIgnoreCase("Content-Type"))
+   if (typeStr.equalsIgnoreCase(CONTENT_TYPE_STR))
    {
       m_type = TYPE_CONTENT_TYPE;
    }
-   else if (typeStr.equalsIgnoreCase("Content-Length"))
+   else if (typeStr.equalsIgnoreCase(CONTENT_LENGTH_TYPE_STR))
    {
       m_type = TYPE_CONTENT_LENGTH;
    }
-   else if (typeStr.equalsIgnoreCase("User-Agent"))
+   else if (typeStr.equalsIgnoreCase(USER_AGENT_TYPE_STR))
    {
       m_type = TYPE_USER_AGENT;
    }

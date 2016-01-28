@@ -34,12 +34,6 @@ ArduinoHttpServer::StreamHttpRequest::StreamHttpRequest(Stream& stream) :
 }
 
 //------------------------------------------------------------------------------
-//! \brief Does nothing.
-ArduinoHttpServer::StreamHttpRequest::~StreamHttpRequest()
-{
-}
-
-//------------------------------------------------------------------------------
 //! \brief Wait for data to become available on Stream and parses the request.
 bool ArduinoHttpServer::StreamHttpRequest::readRequest()
 {
@@ -127,6 +121,8 @@ void ArduinoHttpServer::StreamHttpRequest::parseRequest(char lineBuffer[])
     parseVersion();
 }
 
+//------------------------------------------------------------------------------
+//! \brief Parse method: GET, PUT, HEAD, etc.
 void ArduinoHttpServer::StreamHttpRequest::parseMethod(char lineBuffer[])
 {
     if(m_result!=RESULT_OK) { return; }
@@ -134,23 +130,27 @@ void ArduinoHttpServer::StreamHttpRequest::parseMethod(char lineBuffer[])
     // First strtok call, initialize with cached line buffer.
     String token(strtok(lineBuffer, " "));
 
-    if(token == "GET")
-    {
-        m_method = METHOD_GET;
-    }
-    else if (token == "PUT")
-    {
-        m_method = METHOD_PUT;
-    }
-    else if (token == "POST")
-    {
-       m_method = METHOD_POST;
-    }
-    else
-    {
-       m_method = METHOD_INVALID;
-       setError(String("Cannot handle HTTP method: \"")+token+"\".");
-    }
+   if(token == "GET")
+   {
+      m_method = METHOD_GET;
+   }
+   else if (token == "PUT")
+   {
+      m_method = METHOD_PUT;
+   }
+   else if (token == "POST")
+   {
+      m_method = METHOD_POST;
+   }
+   else if (token == "HEAD")
+   {
+      m_method = METHOD_HEAD;
+   }
+   else
+   {
+      m_method = METHOD_INVALID;
+      setError(String("Cannot handle HTTP method: \"")+token+"\".");
+   }
 }
 
 //! Parse "HTTP/1.1" (or any other version).
@@ -209,7 +209,7 @@ void ArduinoHttpServer::StreamHttpRequest::parseField(char lineBuffer[])
    }
    else
    {
-      // Ignore other fields.
+      // Ignore other fields for now.
    }
 }
 

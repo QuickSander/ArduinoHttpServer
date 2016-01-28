@@ -7,6 +7,9 @@
 //------------------------------------------------------------------------------
 //                             Class Definition
 //------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//! \brief Constructor.
 const String ArduinoHttpServer::AbstractStreamHttpReply::DEFAULT_CONTENT_TYPE = "text/html";
 
 ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stream, const String& contentType, const String& code) :
@@ -17,6 +20,8 @@ ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stre
 
 }
 
+//------------------------------------------------------------------------------
+//! \brief Send this reply / print this reply to stream.
 void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const String& title)
 {
    // Read away remaining bytes.

@@ -32,7 +32,7 @@ public:
 
    HttpField(const char* fieldLine);
    HttpField();
-   ~HttpField();
+   virtual ~HttpField();
 
    HttpField& operator=(const HttpField& other);
 
@@ -45,6 +45,9 @@ private:
    void determineType(const String& typeStr);
 
    static const char *SEPERATOR;
+   static const char* CONTENT_TYPE_STR;
+   static const char* CONTENT_LENGTH_TYPE_STR;
+   static const char* USER_AGENT_TYPE_STR;
 
    TypeEnum m_type;
    String m_value;

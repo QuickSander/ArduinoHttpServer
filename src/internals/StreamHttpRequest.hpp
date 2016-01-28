@@ -26,11 +26,11 @@ class StreamHttpRequest
 {
 
 public:
-    enum MethodEnum {METHOD_INVALID, METHOD_GET, METHOD_PUT, METHOD_POST};
+    enum MethodEnum {METHOD_INVALID, METHOD_GET, METHOD_PUT, METHOD_POST, METHOD_HEAD};
 
     StreamHttpRequest(Stream& stream);
 
-    ~StreamHttpRequest();
+    ~StreamHttpRequest() { };
 
     bool readRequest();
 
@@ -60,33 +60,32 @@ private:
    static const long LINE_READ_TIMEOUT_MS = 10000L; //!< [ms] Wait 10s for reception of a complete line.
    static const int MAX_RETRIES_WAIT_DATA_AVAILABLE = 255;
 
-    void parseRequest(char lineBuffer[MAX_LINE_SIZE]);
-    void parseMethod(char lineBuffer[MAX_LINE_SIZE]);
-    void parseResource();
-    void parseVersion();
+   void parseRequest(char lineBuffer[MAX_LINE_SIZE]);
+   void parseMethod(char lineBuffer[MAX_LINE_SIZE]);
+   void parseResource();
+   void parseVersion();
 
-    void parseField(char lineBuffer[MAX_LINE_SIZE]);
+   void parseField(char lineBuffer[MAX_LINE_SIZE]);
 
-    void neglectToken();
+   void neglectToken();
 
-    bool readLine(char lineBuffer[MAX_LINE_SIZE]);
+   bool readLine(char lineBuffer[MAX_LINE_SIZE]);
 
-    void setError(const String& errorMessage);
+   void setError(const String& errorMessage);
 
-    Stream& m_stream;
+   Stream& m_stream;
 
-    char m_body[MAX_BODY_SIZE];
+   char m_body[MAX_BODY_SIZE];
 
-    MethodEnum m_method;
-    ArduinoHttpServer::HttpResource m_resource;
-    String m_version;
+   MethodEnum m_method;
+   ArduinoHttpServer::HttpResource m_resource;
+   String m_version;
 
-    ArduinoHttpServer::HttpField m_contentTypeField;
-    ArduinoHttpServer::HttpField m_contentLengthField;
+   ArduinoHttpServer::HttpField m_contentTypeField;
+   ArduinoHttpServer::HttpField m_contentLengthField;
 
-    ResultEnum m_result;
-    String m_errorDescription;
-
+   ResultEnum m_result;
+   String m_errorDescription;
 };
 
 }
