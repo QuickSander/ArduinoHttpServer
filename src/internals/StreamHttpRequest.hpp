@@ -44,16 +44,18 @@ public:
     inline const int getContentLength() const { m_contentLengthField.getValueAsInt(); };
 
     // Body retrieval methods.
-    const char * const getBody();
+    inline const char* const getBody() const { return m_body; };
 
     // State retrieval
-    const String& getErrorDescrition();
+    const String& getErrorDescrition() { return m_errorDescription; };
     Stream& getStream() { return m_stream; };
 
 private:
 
    enum ResultEnum {RESULT_ERROR, RESULT_OK};
 
+   //! \todo To reduce program memory size reduce these to the proper types: char and int.
+   //!    Or better yet, make these Template variables.
    static const int MAX_LINE_SIZE = 255+1;
    static const int MAX_BODY_LENGTH = 1023;
    static const int MAX_BODY_SIZE = MAX_BODY_LENGTH+1; //!< Byte size of array. Leaves space for terminating \0.

@@ -1,0 +1,38 @@
+# Created by Sander van Woensel on 29-01-16.
+# Copyright (c) 2016 Sander van Woensel. All rights reserved.
+#
+# Continuous Integration (CI) is the practice, in software
+# engineering, of merging all developer working copies with a shared mainline
+# several times a day < http://docs.platformio.org/en/latest/ci/index.html >
+#
+# Documentation:
+#
+# * Travis CI Embedded Builds with PlatformIO
+#   < https://docs.travis-ci.com/user/integration/platformio/ >
+#
+# * PlatformIO integration with Travis CI
+#   < http://docs.platformio.org/en/latest/ci/travis.html >
+#
+# * User Guide for `platformio ci` command
+#   < http://docs.platformio.org/en/latest/userguide/cmd_ci.html >
+#
+#
+
+language: python
+python:
+    - "2.7"
+
+sudo: false
+cache:
+    directories:
+        - "~/.platformio"
+
+env:
+    # TODO: - PLATFORMIO_CI_SRC=path/to/test/file.c
+    - PLATFORMIO_CI_SRC=examples/HelloHttp/HelloHttp.ino
+
+install:
+    - pip install -U platformio
+
+script:
+    - platformio ci --lib="." --board=esp01 --board=uno

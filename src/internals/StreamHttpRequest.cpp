@@ -22,7 +22,7 @@
 //! \brief Constructor. sets Stream timeout for reading data.
 ArduinoHttpServer::StreamHttpRequest::StreamHttpRequest(Stream& stream) :
     m_stream(stream),
-    m_body({0}),
+    m_body{0},
     m_method(METHOD_INVALID),
     m_resource(),
     m_contentTypeField(),
@@ -211,18 +211,6 @@ void ArduinoHttpServer::StreamHttpRequest::parseField(char lineBuffer[])
    {
       // Ignore other fields for now.
    }
-}
-
-const char * const ArduinoHttpServer::StreamHttpRequest::getBody()
-{
-   DEBUG_PRINT("Body: ");
-   DEBUG_PRINTLN(m_body);
-   return m_body;
-}
-
-const String& ArduinoHttpServer::StreamHttpRequest::getErrorDescrition()
-{
-   return m_errorDescription;
 }
 
 void ArduinoHttpServer::StreamHttpRequest::setError(const String& errorMessage)
