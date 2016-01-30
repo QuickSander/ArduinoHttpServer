@@ -121,9 +121,13 @@ String ArduinoHttpServer::StreamHttpErrorReply::getHtmlBody(const String& data)
 
 String ArduinoHttpServer::StreamHttpErrorReply::getJsonBody(const String& data)
 {
+   // Copy string since replace modifies original.
+   String dataCopy(data);
+   dataCopy.replace("\"", "\\\"");
+
    String body;
    body += "{\"Error\": \"";
-   body += data.replace("\"", "\\\"");
+   body +=dataCopy;
    body += "\"}";
 
    return body;
