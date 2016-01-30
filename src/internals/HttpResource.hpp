@@ -9,7 +9,7 @@
 #ifndef __ArduinoHttpServer__HttpResource__
 #define __ArduinoHttpServer__HttpResource__
 
-#include "Arduino.h"
+#include <WString.h>
 
 namespace ArduinoHttpServer
 {

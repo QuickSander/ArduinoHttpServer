@@ -40,8 +40,8 @@ public:
     inline const String& getVersion() const { return m_version; };
 
     // Field retrieval methods.
-    inline const String& getContentType() const { m_contentTypeField.getValueAsInt(); };
-    inline const int getContentLength() const { m_contentLengthField.getValueAsInt(); };
+    inline const String& getContentType() const { return m_contentTypeField.getValueAsString(); };
+    inline const int getContentLength() const { return m_contentLengthField.getValueAsInt(); };
 
     // Body retrieval methods.
     inline const char* const getBody() const { return m_body; };
@@ -66,7 +66,6 @@ private:
    void parseMethod(char lineBuffer[MAX_LINE_SIZE]);
    void parseResource();
    void parseVersion();
-
    void parseField(char lineBuffer[MAX_LINE_SIZE]);
 
    void neglectToken();
@@ -76,13 +75,10 @@ private:
    void setError(const String& errorMessage);
 
    Stream& m_stream;
-
    char m_body[MAX_BODY_SIZE];
-
    MethodEnum m_method;
    ArduinoHttpServer::HttpResource m_resource;
    String m_version;
-
    ArduinoHttpServer::HttpField m_contentTypeField;
    ArduinoHttpServer::HttpField m_contentLengthField;
 

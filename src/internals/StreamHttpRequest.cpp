@@ -25,10 +25,11 @@ ArduinoHttpServer::StreamHttpRequest::StreamHttpRequest(Stream& stream) :
     m_body{0},
     m_method(METHOD_INVALID),
     m_resource(),
+    m_version(),
     m_contentTypeField(),
     m_contentLengthField(),
-    m_version(),
-    m_result(RESULT_OK)
+    m_result(RESULT_OK),
+    m_errorDescription()
 {
     m_stream.setTimeout(LINE_READ_TIMEOUT_MS);
 }
@@ -160,7 +161,9 @@ void ArduinoHttpServer::StreamHttpRequest::parseVersion()
 
     String version(strtok(0, " "));
     int slashPosition = version.lastIndexOf('/');
-    if (slashPosition < version.length() && slashPosition > 0)
+
+    // String returns unsigned int for length.
+    if (static_cast<unsigned int>(slashPosition) < version.length() && slashPosition > 0)
     {
         m_version = version.substring(slashPosition);
     }

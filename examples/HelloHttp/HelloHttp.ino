@@ -1,6 +1,11 @@
 #include <ArduinoHttpServer.h>
 
-#include <ESP8266WiFi.h>
+#ifdef ESP8266 // This example is compatible with both, ATMega and ESP8266
+   #include <ESP8266WiFi.h>
+#else
+   #include <SPI.h> //! \todo Temporary see fix: https://github.com/platformio/platformio/issues/48
+   #include <WiFi.h>
+#endif
 
 const char* ssid = "";
 const char* password = "";
@@ -11,8 +16,7 @@ void setup()
 {
    Serial.begin(115200);
 
-   WiFi.begin(ssid, password);
-    
+   WiFi.begin(const_cast<char*>(ssid), password);
    while (WiFi.status() != WL_CONNECTED)
    {
       delay(500);
@@ -33,7 +37,7 @@ void loop()
       if (httpRequest.readRequest())
       {
          // Use the information you like they way you like.
-         
+
          // Retrieve HTTP resource / URL requested
          Serial.println( httpRequest.getResource().toString() );
 
@@ -54,7 +58,7 @@ void loop()
          {
             digitalWrite(13, HIGH);
          }
-            
+
       }
       else
       {

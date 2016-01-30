@@ -71,6 +71,8 @@ ArduinoHttpServer::HttpField& ArduinoHttpServer::HttpField::operator=(const Ardu
 {
    m_type = other.m_type;
    m_value = other.m_value;
+
+   return *this;
 }
 
 const ArduinoHttpServer::HttpField::TypeEnum ArduinoHttpServer::HttpField::getType() const

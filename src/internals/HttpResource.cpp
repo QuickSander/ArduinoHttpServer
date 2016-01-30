@@ -9,6 +9,8 @@
 
 #include "HttpResource.hpp"
 
+#include <WString.h>
+
 ArduinoHttpServer::HttpResource::HttpResource(const String& resource) :
    m_resource(resource)
 {
@@ -22,6 +24,8 @@ ArduinoHttpServer::HttpResource::HttpResource() :
 ArduinoHttpServer::HttpResource& ArduinoHttpServer::HttpResource::operator=(const ArduinoHttpServer::HttpResource& other)
 {
    m_resource = other.m_resource;
+
+   return *this;
 }
 
 
@@ -36,7 +40,6 @@ bool ArduinoHttpServer::HttpResource::isValid()
 String ArduinoHttpServer::HttpResource::operator[](const int index) const
 {
    int fromOffset(0);
-   int length(m_resource.length());
 
    // Forward till we reach desired index.
    for (int currentIndex=0; currentIndex <= index; ++currentIndex)
