@@ -14,7 +14,6 @@
 #include "HttpField.hpp"
 #include "Debug.h"
 
-
 #include <Arduino.h>
 
 namespace ArduinoHttpServer
@@ -62,7 +61,6 @@ private:
    //! \todo To reduce program memory size reduce these to the proper types: char and int.
    //!    Or better yet, make these Template variables.
    static const int MAX_LINE_SIZE = 255+1;
-   //static const int MAX_BODY_LENGTH = 1023;
    static const int MAX_BODY_SIZE = MAX_BODY_LENGTH+1; //!< Byte size of array. Leaves space for terminating \0.
    static const long LINE_READ_TIMEOUT_MS = 10000L; //!< [ms] Wait 10s for reception of a complete line.
    static const int MAX_RETRIES_WAIT_DATA_AVAILABLE = 255;
