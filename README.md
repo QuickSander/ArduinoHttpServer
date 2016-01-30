@@ -24,7 +24,7 @@ if (success) // If no HTTP parsing error or read timeout occurred.
 
 
 ### Writing an HTTP reply to some Stream
-```
+```c++
 ArduinoHttpServer::StreamHttpReply httpReply(Serial, "application/json");
 httpReply.send("{\"All your base are belong to us!\"}");
 ```
