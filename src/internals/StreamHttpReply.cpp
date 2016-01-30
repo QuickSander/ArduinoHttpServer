@@ -121,12 +121,9 @@ String ArduinoHttpServer::StreamHttpErrorReply::getHtmlBody(const String& data)
 
 String ArduinoHttpServer::StreamHttpErrorReply::getJsonBody(const String& data)
 {
-   //! \todo Replace by ArduinoJson library call since we need to quote certain data.
-   //! Maybe just String::replace("\"", "\\\"")
-
    String body;
    body += "{\"Error\": \"";
-   body += data;
+   body += data.replace("\"", "\\\"");
    body += "\"}";
 
    return body;

@@ -20,7 +20,7 @@ bool success(httpRequest.readRequest())
 if (success) // If no HTTP parsing error or read timeout occurred.
 {
    // See interface api for other methods.
-   const char \*body( httpRequest.getBody() );
+   const char *body( httpRequest.getBody() );
    // Retrieve 2nd part of the resource URL. E.g. state from: "/api/sensors/1/state"
    const String& restFunction( httpRequest.getResource()[1] );
 }
