@@ -21,7 +21,8 @@ if (success) // If no HTTP parsing error or read timeout occurred.
 {
    // See interface api for other methods.
    const char *body( httpRequest.getBody() );
-   // Retrieve 3rd part of the resource URL. E.g. state from: "/api/sensors/1/state"
+   // Retrieve 4th part (index is zero based) of the resource URL.
+   // E.g. state from: "/api/sensors/1/state"
    const String& restFunction( httpRequest.getResource()[3] );
 }
 ```
