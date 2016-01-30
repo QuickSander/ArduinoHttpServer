@@ -33,8 +33,10 @@ ArduinoHttpServer::StreamHttpReply<127> httpReply(Serial, "application/json");
 httpReply.send("{\"All your base are belong to us!\"}");
 ```
 
-Properties
-----------
+Characteristics
+---------------
 * HTTP parser with with protocol validation.
+* Puts you in control on how to react on a HTTP request; no implicit behaviour.
+* Customizable memory footprint for caching returned body data.
 * No external dependencies outside of the standard Arduino framework.
-* Object oriented implementation
+* Object oriented implementation.
