@@ -14,18 +14,21 @@ Quick start
 ### Reading an HTTP request from some Stream instance
 ```c++
 // This example uses the Stream instance Serial, might also be a WifiClient object.
-ArduinoHttpServer::StreamHttpRequest httpRequest(Serial);
+ArduinoHttpServer::StreamHttpRequest<511> httpRequest(Serial);
 bool success(httpRequest.readRequest())
 if (success) // If no HTTP parsing error or read timeout occurred.
 {
+   // See interface api for other methods.
    const char \*body( httpRequest.getBody() );
+   // Retrieve 2nd part of the resource URL. E.g. state from: "/api/sensors/1/state"
+   const String& restFunction( httpRequest.getResource()[1] );
 }
 ```
 
 
 ### Writing an HTTP reply to some Stream
 ```c++
-ArduinoHttpServer::StreamHttpReply httpReply(Serial, "application/json");
+ArduinoHttpServer::StreamHttpReply<127> httpReply(Serial, "application/json");
 httpReply.send("{\"All your base are belong to us!\"}");
 ```
 

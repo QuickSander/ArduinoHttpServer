@@ -31,7 +31,7 @@ void loop()
    if (client.connected())
    {
       // Connected to client. Allocate and initialize StreamHttpRequest object.
-      ArduinoHttpServer::StreamHttpRequest httpRequest(client);
+      ArduinoHttpServer::StreamHttpRequest<1023> httpRequest(client);
 
       // Parse the request.
       if (httpRequest.readRequest())
@@ -47,14 +47,14 @@ void loop()
 
          // Retrieve HTTP method.
          // E.g.: GET / PUT / HEAD / DELETE / POST
-         ArduinoHttpServer::StreamHttpRequest::MethodEnum method( ArduinoHttpServer::StreamHttpRequest::METHOD_INVALID );
+         ArduinoHttpServer::MethodEnum method( ArduinoHttpServer::MethodInvalid );
          method = httpRequest.getMethod();
 
-         if( method == ArduinoHttpServer::StreamHttpRequest::METHOD_GET )
+         if( method == ArduinoHttpServer::MethodGet )
          {
             Serial.println("Nothing to get here.");
          }
-         else if( method == ArduinoHttpServer::StreamHttpRequest::METHOD_PUT )
+         else if( method == ArduinoHttpServer::MethodPut )
          {
             digitalWrite(13, HIGH);
          }
