@@ -7,7 +7,7 @@
 //
 //! Debug support
 
-#define ARDUINO_HTTP_SERVER_DEBUG
+//#define ARDUINO_HTTP_SERVER_DEBUG
 
 #ifdef ARDUINO_HTTP_SERVER_DEBUG
    #define DEBUG_BEGIN(baudrate) Serial.begin(baudrate)
