@@ -18,7 +18,7 @@ ArduinoHttpServer::StreamHttpRequest httpRequest(Serial);
 bool success(httpRequest.readRequest())
 if (success) // If no HTTP parsing error or read timeout occurred.
 {
-   const char *body( httpRequest.getBody() );
+   const char \*body( httpRequest.getBody() );
 }
 ```
 
@@ -28,3 +28,9 @@ if (success) // If no HTTP parsing error or read timeout occurred.
 ArduinoHttpServer::StreamHttpReply httpReply(Serial, "application/json");
 httpReply.send("{\"All your base are belong to us!\"}");
 ```
+
+Properties
+----------
+* HTTP parser with with protocol validation.
+* No external dependencies outside of the standard Arduino framework.
+* Object oriented implementation
