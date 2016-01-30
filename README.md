@@ -11,7 +11,7 @@ What you do with the request or what you reply is entirely up to your imaginatio
 Quick start
 -----------
 
-### Reading an HTTP request from some Stream
+### Reading an HTTP request from some Stream instance
 ```c++
 // This example uses the Stream instance Serial, might also be a WifiClient object.
 ArduinoHttpServer::StreamHttpRequest httpRequest(Serial);
@@ -20,9 +20,11 @@ if (success) // If no HTTP parsing error or read timeout occurred.
 {
    const char *body( httpRequest.getBody() );
 }
-
-
 ```
 
 
 ### Writing an HTTP reply to some Stream
+```
+ArduinoHttpServer::StreamHttpReply httpReply(Serial, "application/json");
+httpReply.send("{\"All your base are belong to us!\"}");
+```
