@@ -12,6 +12,7 @@
 
 #include "HttpResource.hpp"
 #include "HttpField.hpp"
+#include "HttpVersion.hpp"
 #include "Debug.h"
 
 #include <Arduino.h>
@@ -19,8 +20,10 @@
 namespace ArduinoHttpServer
 {
 
-
-   enum MethodEnum {MethodInvalid, MethodGet, MethodPut, MethodPost, MethodHead};
+enum MethodEnum
+{
+   MethodInvalid, MethodGet, MethodPut, MethodPost, MethodHead
+};
 
 
 //------------------------------------------------------------------------------
@@ -41,7 +44,7 @@ public:
     // Header retrieval methods.
     inline const ArduinoHttpServer::HttpResource& getResource() const { return m_resource; };
     inline const MethodEnum getMethod() const { return m_method; };
-    inline const String& getVersion() const { return m_version; };
+    inline const ArduinoHttpServer::HttpVersion& getVersion() const { return m_version; };
 
     // Field retrieval methods.
     inline const String& getContentType() const { return m_contentTypeField.getValueAsString(); };
@@ -81,7 +84,7 @@ private:
    char m_body[MAX_BODY_SIZE];
    MethodEnum m_method;
    ArduinoHttpServer::HttpResource m_resource;
-   String m_version;
+   ArduinoHttpServer::HttpVersion m_version;
    ArduinoHttpServer::HttpField m_contentTypeField;
    ArduinoHttpServer::HttpField m_contentLengthField;
 
@@ -248,7 +251,7 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseVersion()
     // String returns unsigned int for length.
     if (static_cast<unsigned int>(slashPosition) < version.length() && slashPosition > 0)
     {
-        m_version = version.substring(slashPosition);
+        m_version = HttpVersion(version.substring(slashPosition));
     }
     else
     {

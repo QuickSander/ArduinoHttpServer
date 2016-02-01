@@ -1,6 +1,11 @@
 # ArduinoHttpServer
 
 [![Build Status](https://travis-ci.org/QuickSander/ArduinoHttpServer.svg?branch=master)](https://travis-ci.org/QuickSander/ArduinoHttpServer)
+[![Code Climate](https://codeclimate.com/github/QuickSander/ArduinoHttpServer/badges/gpa.svg)](https://codeclimate.com/github/QuickSander/ArduinoHttpServer)
+[![Test Coverage](https://codeclimate.com/github/QuickSander/ArduinoHttpServer/badges/coverage.svg)](https://codeclimate.com/github/QuickSander/ArduinoHttpServer/coverage)
+
+
+
 
 *Server side minimalistic Object Oriented HTTP protocol implementation for the Arduino platform.*
 
@@ -33,6 +38,11 @@ if (success) // If no HTTP parsing error or read timeout occurred.
 ArduinoHttpServer::StreamHttpReply httpReply(Serial, "application/json");
 httpReply.send("{\"All your base are belong to us!\"}");
 ```
+
+Documentation
+-------------
+
+Documentation available in the [ArduinoHttpServer Github wiki](https://github.com/QuickSander/ArduinoHttpServer/wiki)
 
 Characteristics
 ---------------

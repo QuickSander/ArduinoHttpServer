@@ -63,12 +63,7 @@ class StreamHttpReply: public AbstractStreamHttpReply
 {
 public:
     StreamHttpReply(Stream& stream, const String& contentType);
-
     virtual void send(const String& data) { AbstractStreamHttpReply::send(data, "OK"); };
-
-
-protected:
-
 };
 
 
