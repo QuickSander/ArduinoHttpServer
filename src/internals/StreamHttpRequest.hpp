@@ -17,6 +17,8 @@
 
 #include <Arduino.h>
 
+#include <string.h>
+
 namespace ArduinoHttpServer
 {
 
@@ -90,6 +92,8 @@ private:
 
    ResultEnum m_result;
    String m_errorDescription;
+
+   char *m_lineBufferStrTokContext;
 };
 
 }
@@ -110,7 +114,8 @@ ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::StreamHttpRequest(Stream&
     m_contentTypeField(),
     m_contentLengthField(),
     m_result(ResultOk),
-    m_errorDescription()
+    m_errorDescription(),
+    m_lineBufferStrTokContext(0)
 {
     m_stream.setTimeout(LINE_READ_TIMEOUT_MS);
 }
@@ -214,7 +219,7 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseMethod(char lin
     if(m_result!=ResultOk) { return; }
 
     // First strtok call, initialize with cached line buffer.
-    String token(strtok(lineBuffer, " "));
+    String token(strtok_r(lineBuffer, " ", &m_lineBufferStrTokContext));
 
    if(token == "GET")
    {
@@ -245,7 +250,7 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseVersion()
 {
     if(m_result!=ResultOk) { return; }
 
-    String version(strtok(0, " "));
+    String version(strtok_r(0, " ", &m_lineBufferStrTokContext));
     int slashPosition = version.lastIndexOf('/');
 
     // String returns unsigned int for length.
@@ -268,7 +273,7 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseResource()
 {
    if(m_result!=ResultOk) { return; }
 
-    String resource( strtok(0, " ") );
+    String resource( strtok_r(0, " ", &m_lineBufferStrTokContext) );
     m_resource = ArduinoHttpServer::HttpResource(resource);
 
     if (!m_resource.isValid())
@@ -280,7 +285,7 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseResource()
 template <size_t MAX_BODY_LENGTH>
 void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::neglectToken()
 {
-    strtok(0, " ");
+    strtok_r(0, " ", &m_lineBufferStrTokContext);
 }
 
 template <size_t MAX_BODY_LENGTH>
