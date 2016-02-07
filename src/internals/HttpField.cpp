@@ -21,8 +21,8 @@ ArduinoHttpServer::HttpField::HttpField(const char* fieldLine) :
    m_value()
 {
 
-   DEBUG_PRINT("Parsing HTTP field: ");
-   DEBUG_PRINTLN(fieldLine);
+   DEBUG_ARDUINO_HTTP_SERVER_PRINT("Parsing HTTP field: ");
+   DEBUG_ARDUINO_HTTP_SERVER_PRINTLN(fieldLine);
 
    String fieldStr(fieldLine);
    int fieldSepIndex( fieldStr.indexOf(SEPERATOR) );

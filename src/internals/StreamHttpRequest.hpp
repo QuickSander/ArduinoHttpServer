@@ -155,24 +155,24 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::readRequest()
          parseField(lineBuffer);
       }
 
-      DEBUG_PRINTLN("HTTP field parsing complete.");
+      DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("HTTP field parsing complete.");
 
       // Parse body.
       int contentLength(getContentLength());
       if (contentLength > MAX_BODY_LENGTH)
       {
-         DEBUG_PRINTLN("Content-Length larger then the maximum content we can consume. Trunkating body.");
+         DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("Content-Length larger then the maximum content we can consume. Trunkating body.");
          contentLength = MAX_BODY_LENGTH;
       }
 
-      DEBUG_PRINT("Content-Length: ");
-      DEBUG_PRINTLN(contentLength);
+      DEBUG_ARDUINO_HTTP_SERVER_PRINT("Content-Length: ");
+      DEBUG_ARDUINO_HTTP_SERVER_PRINTLN(contentLength);
 
       if(contentLength > 0)
       {
-         DEBUG_PRINT("Parsing body .... ");
+         DEBUG_ARDUINO_HTTP_SERVER_PRINT("Parsing body .... ");
          m_stream.readBytes(m_body, contentLength);
-         DEBUG_PRINTLN("done");
+         DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done");
       }
    }
 

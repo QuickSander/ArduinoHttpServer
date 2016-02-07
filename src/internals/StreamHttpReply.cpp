@@ -38,9 +38,9 @@ void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const 
    httpErrorReply += data;
    httpErrorReply += "\r\n";
 
-   DEBUG_PRINT("Printing Reply ... ");
+   DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
    getStream().print(httpErrorReply);
-   DEBUG_PRINTLN("done.");
+   DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
 }
 
 
