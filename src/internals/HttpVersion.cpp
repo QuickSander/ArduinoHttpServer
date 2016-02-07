@@ -8,7 +8,7 @@
 //! HTTP version
 
 #include "HttpVersion.hpp"
-#include "Debug.h"
+#include "ArduinoHttpServerDebug.h"
 
 const char ArduinoHttpServer::HttpVersion::SEPARATOR = '.';
 

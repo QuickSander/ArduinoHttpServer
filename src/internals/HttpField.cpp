@@ -8,7 +8,7 @@
 //! A single header field.
 
 #include "HttpField.hpp"
-#include "Debug.h"
+#include "ArduinoHttpServerDebug.h"
 
 const char* ArduinoHttpServer::HttpField::SEPERATOR = ": ";
 const char* ArduinoHttpServer::HttpField::CONTENT_TYPE_STR = "Content-Type";

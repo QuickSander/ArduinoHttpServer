@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-#include "Debug.h"
+#include "ArduinoHttpServerDebug.h"
 
 //------------------------------------------------------------------------------
 //                             Class Definition

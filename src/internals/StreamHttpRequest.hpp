@@ -13,7 +13,7 @@
 #include "HttpResource.hpp"
 #include "HttpField.hpp"
 #include "HttpVersion.hpp"
-#include "Debug.h"
+#include "ArduinoHttpServerDebug.h"
 
 #include <Arduino.h>
 
