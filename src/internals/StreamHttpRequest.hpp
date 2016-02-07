@@ -117,7 +117,8 @@ ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::StreamHttpRequest(Stream&
     m_errorDescription(),
     m_lineBufferStrTokContext(0)
 {
-    m_stream.setTimeout(LINE_READ_TIMEOUT_MS);
+   static_assert(MAX_BODY_LENGTH >= 0, "HTTP body length less then zero specified.");
+   m_stream.setTimeout(LINE_READ_TIMEOUT_MS);
 }
 
 //------------------------------------------------------------------------------
@@ -264,6 +265,7 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseVersion()
         message += version;
         message += "\".";
         setError(message);
+
     }
 
 }

@@ -25,7 +25,7 @@ public:
     HttpResource& operator=(const HttpResource& other);
 
     bool isValid();
-    String operator[](const int index) const;
+    String operator[](const unsigned int index) const;
     const String& toString() const;
 
 private:

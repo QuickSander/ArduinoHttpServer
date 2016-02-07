@@ -15,6 +15,7 @@ WiFiServer wifiServer(80);
 void setup()
 {
    Serial.begin(115200);
+   Serial.println("Starting Wifi Connection...");
 
    WiFi.begin(const_cast<char*>(ssid), password);
    while (WiFi.status() != WL_CONNECTED)

@@ -37,12 +37,12 @@ bool ArduinoHttpServer::HttpResource::isValid()
 //! Retrieve resource part at the specified index.
 //! \details E.g. HttpResource("/api/sensors/1/state")[1]
 //!    returns "sensors"
-String ArduinoHttpServer::HttpResource::operator[](const int index) const
+String ArduinoHttpServer::HttpResource::operator[](const unsigned int index) const
 {
    int fromOffset(0);
 
    // Forward till we reach desired index.
-   for (int currentIndex=0; currentIndex <= index; ++currentIndex)
+   for (unsigned int currentIndex=0; currentIndex <= index; ++currentIndex)
    {
       fromOffset = m_resource.indexOf(RESOURCE_SEPERATOR, fromOffset);
       ++fromOffset; // Seek past '/'.
