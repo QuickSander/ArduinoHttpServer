@@ -32,7 +32,7 @@ enum MethodEnum
 //                             Class Declaration
 //------------------------------------------------------------------------------
 //! HTTP request read from a _Stream_.
-template <size_t MAX_BODY_LENGTH>
+template <size_t MAX_BODY_SIZE>
 class StreamHttpRequest
 {
 
@@ -53,6 +53,7 @@ public:
     inline const int getContentLength() const { return m_contentLengthField.getValueAsInt(); };
 
     // Body retrieval methods.
+    //! Retrieve zero terminated body content.
     inline const char* const getBody() const { return m_body; };
 
     // State retrieval
@@ -66,7 +67,7 @@ private:
    //! \todo To reduce program memory size reduce these to the proper types: char and int.
    //!    Or better yet, make these Template variables.
    static const int MAX_LINE_SIZE = 255+1;
-   static const int MAX_BODY_SIZE = MAX_BODY_LENGTH+1; //!< Byte size of array. Leaves space for terminating \0.
+   static const int MAX_BODY_LENGTH= MAX_BODY_SIZE-1; //!< Byte size of array. Leaves space for terminating \0.
    static const long LINE_READ_TIMEOUT_MS = 10000L; //!< [ms] Wait 10s for reception of a complete line.
    static const int MAX_RETRIES_WAIT_DATA_AVAILABLE = 255;
 
@@ -104,8 +105,8 @@ private:
 
 //------------------------------------------------------------------------------
 //! \brief Constructor. sets Stream timeout for reading data.
-template <size_t MAX_BODY_LENGTH>
-ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::StreamHttpRequest(Stream& stream) :
+template <size_t MAX_BODY_SIZE>
+ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::StreamHttpRequest(Stream& stream) :
     m_stream(stream),
     m_body{0},
     m_method(MethodInvalid),
@@ -117,14 +118,14 @@ ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::StreamHttpRequest(Stream&
     m_errorDescription(),
     m_lineBufferStrTokContext(0)
 {
-   static_assert(MAX_BODY_LENGTH >= 0, "HTTP body length less then zero specified.");
+   static_assert(MAX_BODY_SIZE >= 0, "HTTP body length less then zero specified.");
    m_stream.setTimeout(LINE_READ_TIMEOUT_MS);
 }
 
 //------------------------------------------------------------------------------
 //! \brief Wait for data to become available on Stream and parses the request.
-template <size_t MAX_BODY_LENGTH>
-bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::readRequest()
+template <size_t MAX_BODY_SIZE>
+bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::readRequest()
 {
 
    char lineBuffer[MAX_LINE_SIZE] = {0};
@@ -182,8 +183,8 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::readRequest()
 
 //------------------------------------------------------------------------------
 //! \brief Read a single line from Stream into _linebuffer_
-template <size_t MAX_BODY_LENGTH>
-bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::readLine(char linebuffer[])
+template <size_t MAX_BODY_SIZE>
+bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::readLine(char linebuffer[])
 {
     if(m_result!=ResultOk) { return false; }
 
@@ -204,8 +205,8 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::readLine(char linebu
 
 //------------------------------------------------------------------------------
 //! \brief Parse first line of HTTP request.
-template <size_t MAX_BODY_LENGTH>
-void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseRequest(char lineBuffer[])
+template <size_t MAX_BODY_SIZE>
+void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseRequest(char lineBuffer[])
 {
     parseMethod(lineBuffer);
     parseResource();
@@ -214,8 +215,8 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseRequest(char li
 
 //------------------------------------------------------------------------------
 //! \brief Parse method: GET, PUT, HEAD, etc.
-template <size_t MAX_BODY_LENGTH>
-void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseMethod(char lineBuffer[])
+template <size_t MAX_BODY_SIZE>
+void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseMethod(char lineBuffer[])
 {
     if(m_result!=ResultOk) { return; }
 
@@ -246,8 +247,8 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseMethod(char lin
 }
 
 //! Parse "HTTP/1.1" (or any other version).
-template <size_t MAX_BODY_LENGTH>
-void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseVersion()
+template <size_t MAX_BODY_SIZE>
+void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseVersion()
 {
     if(m_result!=ResultOk) { return; }
 
@@ -270,8 +271,8 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseVersion()
 
 }
 
-template <size_t MAX_BODY_LENGTH>
-void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseResource()
+template <size_t MAX_BODY_SIZE>
+void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseResource()
 {
    if(m_result!=ResultOk) { return; }
 
@@ -284,14 +285,14 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseResource()
     }
 }
 
-template <size_t MAX_BODY_LENGTH>
-void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::neglectToken()
+template <size_t MAX_BODY_SIZE>
+void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::neglectToken()
 {
     strtok_r(0, " ", &m_lineBufferStrTokContext);
 }
 
-template <size_t MAX_BODY_LENGTH>
-void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseField(char lineBuffer[])
+template <size_t MAX_BODY_SIZE>
+void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseField(char lineBuffer[])
 {
    if(m_result!=ResultOk) { return; }
 
@@ -311,8 +312,8 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseField(char line
    }
 }
 
-template <size_t MAX_BODY_LENGTH>
-void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::setError(const String& errorMessage)
+template <size_t MAX_BODY_SIZE>
+void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::setError(const String& errorMessage)
 {
    m_result = ResultError;
    m_errorDescription = errorMessage;

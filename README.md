@@ -19,8 +19,8 @@ Quick start
 ### Reading an HTTP request from some Stream instance
 ```c++
 // This example uses the Stream instance Serial, might also be a WifiClient object.
-// Reserve 511 bytes for body content storage.
-ArduinoHttpServer::StreamHttpRequest<511> httpRequest(Serial);
+// Reserve 512 bytes for body content storage.
+ArduinoHttpServer::StreamHttpRequest<512> httpRequest(Serial);
 bool success(httpRequest.readRequest())
 if (success) // If no HTTP parsing error or read timeout occurred.
 {
