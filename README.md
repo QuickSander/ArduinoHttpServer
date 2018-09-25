@@ -1,5 +1,6 @@
 # ArduinoHttpServer
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d6c43caaa5e24ebd9cf2119ac7963ce6)](https://app.codacy.com/app/QuickSander/ArduinoHttpServer?utm_source=github.com&utm_medium=referral&utm_content=QuickSander/ArduinoHttpServer&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/QuickSander/ArduinoHttpServer.svg?branch=master)](https://travis-ci.org/QuickSander/ArduinoHttpServer)
 [![Code Climate](https://codeclimate.com/github/QuickSander/ArduinoHttpServer/badges/gpa.svg)](https://codeclimate.com/github/QuickSander/ArduinoHttpServer)
 [![Test Coverage](https://codeclimate.com/github/QuickSander/ArduinoHttpServer/badges/coverage.svg)](https://codeclimate.com/github/QuickSander/ArduinoHttpServer/coverage)
