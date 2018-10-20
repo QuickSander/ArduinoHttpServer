@@ -25,7 +25,7 @@ ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stre
 void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const String& title)
 {
    // Read away remaining bytes.
-   while(getStream().read()>=0);
+   while(getStream().read()>0);
 
    String httpErrorReply("HTTP/1.1 ");
    httpErrorReply += getCode() + " ";
