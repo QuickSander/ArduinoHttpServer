@@ -135,7 +135,7 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::readRequest()
       // Quit when failed to retrieve data after n retries.
       if(attempts >= MAX_RETRIES_WAIT_DATA_AVAILABLE)
       {
-         setError("Time out while waiting for data to become available.");
+         setError(F("Time out while waiting for data to become available."));
          break;
       }
 
@@ -240,8 +240,14 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseMethod(char lin
    }
    else
    {
+      String errorStr;
+      
       m_method = MethodInvalid;
-      setError(String("Cannot handle HTTP method: \"")+token+"\".");
+      
+      errorStr += F("Cannot handle HTTP method: \"");
+      errorStr += token;
+      errorStr += F("\".");
+      setError(errorStr);
    }
 }
 
@@ -261,7 +267,8 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseVersion()
     }
     else
     {
-        String message("Parse error. Invalid HTTP version: \"");
+        String message;
+        message += F("Parse error. Invalid HTTP version: \"");
         message += version;
         message += "\".";
         setError(message);
@@ -280,7 +287,7 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_LENGTH>::parseResource()
 
     if (!m_resource.isValid())
     {
-        setError("Parse error. No resource specified.");
+        setError(F("Parse error. No resource specified."));
     }
 }
 
