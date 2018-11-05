@@ -21,6 +21,7 @@ ArduinoHttpServer::HttpResource::HttpResource() :
 {
 }
 
+// TODO: default?
 ArduinoHttpServer::HttpResource& ArduinoHttpServer::HttpResource::operator=(const ArduinoHttpServer::HttpResource& other)
 {
    m_resource = other.m_resource;

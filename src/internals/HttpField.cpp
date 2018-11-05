@@ -17,19 +17,20 @@ const char* ArduinoHttpServer::HttpField::USER_AGENT_TYPE_STR = "User-Agent";
 
 
 ArduinoHttpServer::HttpField::HttpField(const char* fieldLine) :
-   m_type(TYPE_NOT_SUPPORTED),
+   m_type(Type::NOT_SUPPORTED),
    m_value()
 {
 
    DEBUG_ARDUINO_HTTP_SERVER_PRINT("Parsing HTTP field: ");
    DEBUG_ARDUINO_HTTP_SERVER_PRINTLN(fieldLine);
 
+   //! \todo FixString
    String fieldStr(fieldLine);
    int fieldSepIndex( fieldStr.indexOf(SEPERATOR) );
 
    if( fieldSepIndex < 1 )
    {
-      m_type = TYPE_NOT_SUPPORTED;
+      m_type = Type::NOT_SUPPORTED;
    }
    else
    {
@@ -41,7 +42,7 @@ ArduinoHttpServer::HttpField::HttpField(const char* fieldLine) :
 }
 
 ArduinoHttpServer::HttpField::HttpField() :
-   m_type(TYPE_NOT_SUPPORTED),
+   m_type(Type::NOT_SUPPORTED),
    m_value()
 {
 }
@@ -55,27 +56,20 @@ void ArduinoHttpServer::HttpField::determineType(const String& typeStr)
 {
    if (typeStr.equalsIgnoreCase(CONTENT_TYPE_STR))
    {
-      m_type = TYPE_CONTENT_TYPE;
+      m_type = Type::CONTENT_TYPE;
    }
    else if (typeStr.equalsIgnoreCase(CONTENT_LENGTH_TYPE_STR))
    {
-      m_type = TYPE_CONTENT_LENGTH;
+      m_type = Type::CONTENT_LENGTH;
    }
    else if (typeStr.equalsIgnoreCase(USER_AGENT_TYPE_STR))
    {
-      m_type = TYPE_USER_AGENT;
+      m_type = Type::USER_AGENT;
    }
 }
 
-ArduinoHttpServer::HttpField& ArduinoHttpServer::HttpField::operator=(const ArduinoHttpServer::HttpField& other)
-{
-   m_type = other.m_type;
-   m_value = other.m_value;
 
-   return *this;
-}
-
-const ArduinoHttpServer::HttpField::TypeEnum ArduinoHttpServer::HttpField::getType() const
+const ArduinoHttpServer::HttpField::Type ArduinoHttpServer::HttpField::getType() const
 {
    return m_type;
 }

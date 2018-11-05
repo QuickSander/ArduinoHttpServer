@@ -18,13 +18,14 @@ ArduinoHttpServer::HttpVersion::HttpVersion() :
 {
 }
 
-ArduinoHttpServer::HttpVersion::HttpVersion(const String& version) :
+ArduinoHttpServer::HttpVersion::HttpVersion(const FixStringT& version) :
    m_major(0),
    m_minor(0)
 {
    int dotIndex(version.lastIndexOf(SEPARATOR));
 
-   // Cast might possibly invalidate version data when versions become bigger then 255.
+   // Cast might possibly invalidate version data when versions become bigger than 255.
+   // 1.0
    m_major = static_cast<unsigned char>( version.substring(0, dotIndex).toInt() );
    m_minor = static_cast<unsigned char>( version.substring(dotIndex+1, version.length()).toInt() );
 }

@@ -21,22 +21,23 @@ class HttpField
 
 public:
 
-   enum TypeEnum
+   enum class Type: char
    {
-      TYPE_NOT_SUPPORTED,
-      TYPE_CONTENT_TYPE,
-      TYPE_CONTENT_LENGTH,
-      TYPE_USER_AGENT
-
+      NOT_SUPPORTED,
+      CONTENT_TYPE,
+      CONTENT_LENGTH,
+      USER_AGENT
    };
 
    HttpField(const char* fieldLine);
    HttpField();
    virtual ~HttpField();
 
-   HttpField& operator=(const HttpField& other);
+   HttpField& operator=(const HttpField& other) = default;
+   HttpField& operator=(HttpField&& other) = default;
+   HttpField(const HttpField& other) = delete;
 
-   const TypeEnum getType() const;
+   const Type getType() const;
 
    inline const String& getValueAsString() const {return m_value; };
    inline const int getValueAsInt() const {return m_value.toInt(); };
@@ -49,7 +50,7 @@ private:
    static const char* CONTENT_LENGTH_TYPE_STR;
    static const char* USER_AGENT_TYPE_STR;
 
-   TypeEnum m_type;
+   Type m_type;
    String m_value;
 
 };

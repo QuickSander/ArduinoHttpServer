@@ -11,6 +11,7 @@
 #define __ArduinoHttpServer__HttpVersion__
 
 #include "Arduino.h"
+#include "FixString.hpp"
 
 namespace ArduinoHttpServer
 {
@@ -18,9 +19,10 @@ namespace ArduinoHttpServer
 //! A single HTTP field.
 class HttpVersion
 {
-
 public:
-   HttpVersion(const String& version);
+   typedef FixString<16U> FixStringT;
+
+   HttpVersion(const FixStringT& version);
    HttpVersion();
 
    HttpVersion& operator=(const HttpVersion& rhs);

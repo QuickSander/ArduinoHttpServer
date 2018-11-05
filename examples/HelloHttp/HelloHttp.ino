@@ -32,7 +32,7 @@ void loop()
    if (client.connected())
    {
       // Connected to client. Allocate and initialize StreamHttpRequest object.
-      ArduinoHttpServer::StreamHttpRequest<1023> httpRequest(client);
+      ArduinoHttpServer::StreamHttpRequest<1024> httpRequest(client);
 
       // Parse the request.
       if (httpRequest.readRequest())
@@ -48,14 +48,14 @@ void loop()
 
          // Retrieve HTTP method.
          // E.g.: GET / PUT / HEAD / DELETE / POST
-         ArduinoHttpServer::MethodEnum method( ArduinoHttpServer::MethodInvalid );
+         ArduinoHttpServer::Method method( ArduinoHttpServer::Method::Invalid );
          method = httpRequest.getMethod();
 
-         if( method == ArduinoHttpServer::MethodGet )
+         if( method == ArduinoHttpServer::Method::Get )
          {
             Serial.println("Nothing to get here.");
          }
-         else if( method == ArduinoHttpServer::MethodPut )
+         else if( method == ArduinoHttpServer::Method::Put )
          {
             digitalWrite(13, HIGH);
          }
@@ -66,7 +66,11 @@ void loop()
          // HTTP parsing failed. Client did not provide correct HTTP data or
          // client requested an unsupported feature.
          ArduinoHttpServer::StreamHttpErrorReply httpReply(client, httpRequest.getContentType());
-         httpReply.send(httpRequest.getErrorDescrition());
+
+         const char *pErrorStr( httpRequest.getError().cStr() );
+         String errorStr(pErrorStr); //! \todo Make HttpReply FixString compatible.
+
+         httpReply.send( errorStr );
       }
    }
 

@@ -4,7 +4,7 @@
     "description": "Server side minimalistic HTTP protocol implementation that leaves you in control",
     "authors": {
       "name": "Sander van Woensel",
-      "url": "http://quicksander.net"
+      "url": "http://sander.technology"
     },
     "repository":
     {

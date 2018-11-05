@@ -10,6 +10,7 @@
 #ifndef __ArduinoHttpServer__StreamHttpRequest__
 #define __ArduinoHttpServer__StreamHttpRequest__
 
+#include "FixString.hpp"
 #include "HttpResource.hpp"
 #include "HttpField.hpp"
 #include "HttpVersion.hpp"
@@ -22,11 +23,14 @@
 namespace ArduinoHttpServer
 {
 
-enum MethodEnum
+enum class Method : char
 {
-   MethodInvalid, MethodGet, MethodPut, MethodPost, MethodHead
+   Invalid, Get, Put, Post, Head, Delete
 };
 
+
+typedef FixString<32> ErrorMessageString;
+typedef FixString<128> ErrorString;
 
 //------------------------------------------------------------------------------
 //                             Class Declaration
@@ -45,8 +49,8 @@ public:
 
     // Header retrieval methods.
     inline const ArduinoHttpServer::HttpResource& getResource() const { return m_resource; };
-    inline const MethodEnum getMethod() const { return m_method; };
     inline const ArduinoHttpServer::HttpVersion& getVersion() const { return m_version; };
+    inline const ArduinoHttpServer::Method getMethod() const { return m_method; };
 
     // Field retrieval methods.
     inline const String& getContentType() const { return m_contentTypeField.getValueAsString(); };
@@ -57,17 +61,23 @@ public:
     inline const char* const getBody() const { return m_body; };
 
     // State retrieval
-    const String& getErrorDescrition() { return m_errorDescription; };
+    const ErrorString getError() const;
     Stream& getStream() { return m_stream; };
 
 private:
 
-   enum ResultEnum {ResultError, ResultOk};
+   enum class Error: char {
+      OK,
+      TIMEOUT,
+      CANNOT_HANDLE_HTTP_METHOD,
+      PARSE_ERROR_INVALID_HTTP_VERSION,
+      PARSE_ERROR_NO_RESOURCE
+   };
 
    //! \todo To reduce program memory size reduce these to the proper types: char and int.
    //!    Or better yet, make these Template variables.
    static const int MAX_LINE_SIZE = 255+1;
-   static const int MAX_BODY_LENGTH= MAX_BODY_SIZE-1; //!< Byte size of array. Leaves space for terminating \0.
+   static const int MAX_BODY_LENGTH = MAX_BODY_SIZE-1; //!< Byte size of array. Leaves space for terminating \0.
    static const long LINE_READ_TIMEOUT_MS = 10000L; //!< [ms] Wait 10s for reception of a complete line.
    static const int MAX_RETRIES_WAIT_DATA_AVAILABLE = 255;
 
@@ -81,18 +91,18 @@ private:
 
    bool readLine(char lineBuffer[MAX_LINE_SIZE]);
 
-   void setError(const String& errorMessage);
+   void setError(const Error, const ErrorMessageString& errorMessage);
 
    Stream& m_stream;
    char m_body[MAX_BODY_SIZE];
-   MethodEnum m_method;
+   Method m_method;
    ArduinoHttpServer::HttpResource m_resource;
    ArduinoHttpServer::HttpVersion m_version;
    ArduinoHttpServer::HttpField m_contentTypeField;
    ArduinoHttpServer::HttpField m_contentLengthField;
 
-   ResultEnum m_result;
-   String m_errorDescription;
+   Error m_error;
+   ErrorMessageString m_errorDetail;
 
    char *m_lineBufferStrTokContext;
 };
@@ -109,13 +119,13 @@ template <size_t MAX_BODY_SIZE>
 ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::StreamHttpRequest(Stream& stream) :
     m_stream(stream),
     m_body{0},
-    m_method(MethodInvalid),
+    m_method(Method::Invalid),
     m_resource(),
     m_version(),
     m_contentTypeField(),
     m_contentLengthField(),
-    m_result(ResultOk),
-    m_errorDescription(),
+    m_error(Error::OK),
+    m_errorDetail(),
     m_lineBufferStrTokContext(0)
 {
    static_assert(MAX_BODY_SIZE >= 0, "HTTP body length less then zero specified.");
@@ -136,7 +146,7 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::readRequest()
       // Quit when failed to retrieve data after n retries.
       if(attempts >= MAX_RETRIES_WAIT_DATA_AVAILABLE)
       {
-         setError("Time out while waiting for data to become available.");
+         setError(Error::TIMEOUT);
          break;
       }
 
@@ -177,7 +187,7 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::readRequest()
       }
    }
 
-   return m_result == ResultOk;
+   return m_error == Error::OK;
 }
 
 
@@ -186,7 +196,7 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::readRequest()
 template <size_t MAX_BODY_SIZE>
 bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::readLine(char linebuffer[])
 {
-    if(m_result!=ResultOk) { return false; }
+    if(m_error!=Error::OK) { return false; }
 
     int bytesRead(0);
 
@@ -218,31 +228,36 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseRequest(char line
 template <size_t MAX_BODY_SIZE>
 void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseMethod(char lineBuffer[])
 {
-    if(m_result!=ResultOk) { return; }
+   if(m_error!=Error::OK) { return; }
 
-    // First strtok call, initialize with cached line buffer.
-    String token(strtok_r(lineBuffer, " ", &m_lineBufferStrTokContext));
+   // First strtok call, initialize with cached line buffer.
+   // len("DELETE") + 1 for terminating null = 7
+   FixString<7U> token(strtok_r(lineBuffer, " ", &m_lineBufferStrTokContext));
 
    if(token == "GET")
    {
-      m_method = MethodGet;
+      m_method = Method::Get;
    }
    else if (token == "PUT")
    {
-      m_method = MethodPut;
+      m_method = Method::Put;
    }
    else if (token == "POST")
    {
-      m_method = MethodPost;
+      m_method = Method::Post;
    }
    else if (token == "HEAD")
    {
-      m_method = MethodHead;
+      m_method = Method::Head;
+   }
+   else if (token == "DELETE")
+   {
+      m_method = Method::Delete;
    }
    else
    {
-      m_method = MethodInvalid;
-      setError(String("Cannot handle HTTP method: \"")+token+"\".");
+      m_method = Method::Invalid;
+      setError(Error::CANNOT_HANDLE_HTTP_METHOD, token);
    }
 }
 
@@ -250,10 +265,13 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseMethod(char lineB
 template <size_t MAX_BODY_SIZE>
 void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseVersion()
 {
-    if(m_result!=ResultOk) { return; }
+    if(m_error!=Error::OK) { return; }
 
-    String version(strtok_r(0, " ", &m_lineBufferStrTokContext));
-    int slashPosition = version.lastIndexOf('/');
+    // HTTP/000.000
+    HttpVersion::FixStringT version(strtok_r(0, " ", &m_lineBufferStrTokContext));
+
+    //String version(strtok_r(0, " ", &m_lineBufferStrTokContext));
+    int slashPosition(version.lastIndexOf('/'));
 
     // String returns unsigned int for length.
     if (static_cast<unsigned int>(slashPosition) < version.length() && slashPosition > 0)
@@ -262,10 +280,7 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseVersion()
     }
     else
     {
-        String message("Parse error. Invalid HTTP version: \"");
-        message += version;
-        message += "\".";
-        setError(message);
+        setError(Error::PARSE_ERROR_INVALID_HTTP_VERSION, version);
 
     }
 
@@ -274,14 +289,14 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseVersion()
 template <size_t MAX_BODY_SIZE>
 void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseResource()
 {
-   if(m_result!=ResultOk) { return; }
+   if(m_error!=Error::OK) { return; }
 
     String resource( strtok_r(0, " ", &m_lineBufferStrTokContext) );
     m_resource = ArduinoHttpServer::HttpResource(resource);
 
     if (!m_resource.isValid())
     {
-        setError("Parse error. No resource specified.");
+        setError(Error::PARSE_ERROR_NO_RESOURCE);
     }
 }
 
@@ -294,15 +309,15 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::neglectToken()
 template <size_t MAX_BODY_SIZE>
 void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseField(char lineBuffer[])
 {
-   if(m_result!=ResultOk) { return; }
+   if(m_error!=Error::OK) { return; }
 
    ArduinoHttpServer::HttpField httpField(lineBuffer);
 
-   if(httpField.getType() == ArduinoHttpServer::HttpField::TYPE_CONTENT_TYPE)
+   if(httpField.getType() == ArduinoHttpServer::HttpField::Type::CONTENT_TYPE)
    {
       m_contentTypeField = httpField;
    }
-   else if(httpField.getType() == ArduinoHttpServer::HttpField::TYPE_CONTENT_LENGTH)
+   else if(httpField.getType() == ArduinoHttpServer::HttpField::Type::CONTENT_LENGTH)
    {
       m_contentLengthField = httpField;
    }
@@ -313,10 +328,48 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseField(char lineBu
 }
 
 template <size_t MAX_BODY_SIZE>
-void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::setError(const String& errorMessage)
+void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::setError(const Error error, const ErrorMessageString& errorMessage = ErrorMessageString())
 {
-   m_result = ResultError;
-   m_errorDescription = errorMessage;
+   m_error = error;
+   m_errorDetail = errorMessage;
 }
+
+template <size_t MAX_BODY_SIZE>
+const ArduinoHttpServer::ErrorString ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::getError() const
+{
+   ErrorString errorString;
+   switch(m_error)
+   {
+      case Error::OK:
+         break;
+
+      case Error::TIMEOUT:
+         errorString = "Timeout occurred while waiting for data";
+         break;
+
+      case Error::CANNOT_HANDLE_HTTP_METHOD:
+         errorString = "Don't know how to handle HTTP method: \"";
+         errorString += m_errorDetail;
+         errorString += "\"";
+         break;
+
+      case Error::PARSE_ERROR_INVALID_HTTP_VERSION:
+         errorString = "Invalid HTTP version: \"";
+         errorString += m_errorDetail;
+         errorString += "\"";
+         break;
+
+      case Error::PARSE_ERROR_NO_RESOURCE:
+         errorString = "No resource specified.";
+         break;
+
+      default:
+         break;
+   }
+
+   return errorString;
+}
+
+
 
 #endif // __ArduinoHttpServer__StreamHttpRequest__
