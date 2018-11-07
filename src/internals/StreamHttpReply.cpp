@@ -27,16 +27,17 @@ void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const 
    // Read away remaining bytes.
    while(getStream().read()>=0);
 
-   String httpErrorReply("HTTP/1.1 ");
+   String httpErrorReply;
+   httpErrorReply += F("HTTP/1.1 ");
    httpErrorReply += getCode() + " ";
-   httpErrorReply +=  title + "\r\n";
-   httpErrorReply += "Connection: close\r\n";
-   httpErrorReply += "Content-Length: ";
-   httpErrorReply += data.length(); httpErrorReply += "\r\n";
-   httpErrorReply += "Content-Type: "; httpErrorReply += m_contentType; httpErrorReply+= "\r\n";
-   httpErrorReply += "\r\n";
+   httpErrorReply += title + "\r\n";
+   httpErrorReply += F("Connection: close\r\n");
+   httpErrorReply += F("Content-Length: ");
+   httpErrorReply += data.length(); httpErrorReply += F("\r\n");
+   httpErrorReply += F("Content-Type: "); httpErrorReply += m_contentType; httpErrorReply+= F("\r\n");
+   httpErrorReply += F("\r\n");
    httpErrorReply += data;
-   httpErrorReply += "\r\n";
+   httpErrorReply += F("\r\n");
 
    DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
    getStream().print(httpErrorReply);
@@ -108,13 +109,13 @@ void ArduinoHttpServer::StreamHttpErrorReply::send(const String& data)
 String ArduinoHttpServer::StreamHttpErrorReply::getHtmlBody(const String& data)
 {
    String body;
-   body += "<html><head><title>Error: ";
+   body += F("<html><head><title>Error: ");
    body += getCode();
-   body += "</title></head><body><h3>Error ";
+   body += F("</title></head><body><h3>Error ");
    body += getCode();
-   body += ": ";
+   body += F(": ");
    body += data;
-   body += "</h3></body></html>";
+   body += F("</h3></body></html>");
 
    return body;
 }
@@ -126,9 +127,9 @@ String ArduinoHttpServer::StreamHttpErrorReply::getJsonBody(const String& data)
    dataCopy.replace("\"", "\\\"");
 
    String body;
-   body += "{\"Error\": \"";
+   body += F("{\"Error\": \"");
    body +=dataCopy;
-   body += "\"}";
+   body += F("\"}");
 
    return body;
 }
