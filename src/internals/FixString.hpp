@@ -3,7 +3,7 @@
 //  ArduinoHttpServer
 //
 //  Created by Sander van Woensel on 24-02-16.
-//  Copyright (c) 2016 Sander van Woensel. All rights reserved.
+//  Copyright (c) 2016-2018 Sander van Woensel. All rights reserved.
 //
 //! Pre-allocated string
 
@@ -66,7 +66,8 @@ public:
    // Conversions
    const char* cStr() const { return m_buffer; };
    explicit operator const char*() { return m_buffer; };
-   // String conversion operator left out on purpose.
+   String toString() const {return String(m_buffer);};
+   explicit operator String() const {return this->toString();};
    long toInt() const { return atol(m_buffer); }
 
    // Property retrieval

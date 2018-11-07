@@ -2,10 +2,12 @@
     "name": "ArduinoHttpServer",
     "keywords": "http, get, post, delete, request, reply, protocol, web",
     "description": "Server side minimalistic HTTP protocol implementation that leaves you in control",
-    "authors": {
+    "authors":
+    {
       "name": "Sander van Woensel",
       "url": "http://sander.technology"
     },
+    "version": "0.9.0",
     "repository":
     {
         "type": "git",
