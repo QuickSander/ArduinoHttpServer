@@ -28,8 +28,8 @@ cache:
         - "~/.platformio"
 
 env:
-      - PLATFORMIO_CI_SRC=test
-      - PLATFORMIO_CI_SRC=examples/HelloHttp.ino
+      #- PLATFORMIO_CI_SRC=test
+      - PLATFORMIO_CI_SRC=examples/HelloHttp/HelloHttp.ino
       #- PLATFORMIO_CI_SRC=examples/SerialHttp/SerialHttp.ino
 
 install:
