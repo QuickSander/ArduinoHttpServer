@@ -91,7 +91,7 @@ private:
 
    bool readLine(char lineBuffer[MAX_LINE_SIZE]);
 
-   void setError(const Error, const ErrorMessageString& errorMessage);
+   void setError(const Error, const ErrorMessageString& errorMessage = ErrorMessageString());
 
    Stream& m_stream;
    char m_body[MAX_BODY_SIZE];
@@ -328,7 +328,7 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseField(char lineBu
 }
 
 template <size_t MAX_BODY_SIZE>
-void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::setError(const Error error, const ErrorMessageString& errorMessage = ErrorMessageString())
+void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::setError(const Error error, const ErrorMessageString& errorMessage)
 {
    m_error = error;
    m_errorDetail = errorMessage;
