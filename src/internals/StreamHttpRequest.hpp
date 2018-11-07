@@ -356,7 +356,7 @@ const ArduinoHttpServer::ErrorString ArduinoHttpServer::StreamHttpRequest<MAX_BO
       case Error::PARSE_ERROR_INVALID_HTTP_VERSION:
          errorString = F("Invalid HTTP version: \"");
          errorString += m_errorDetail;
-         errorString += "\"";
+         errorString += F("\"");
          break;
 
       case Error::PARSE_ERROR_NO_RESOURCE:
