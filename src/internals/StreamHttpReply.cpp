@@ -90,7 +90,7 @@ void ArduinoHttpServer::StreamHttpErrorReply::send(const String& data)
 
    if(getContentType() == CONTENT_TYPE_TEXT_HTML)
    {
-      body = data;
+      body = getHtmlBody(data);
    }
    else if(getContentType() == CONTENT_TYPE_APPLICATION_JSON)
    {
@@ -98,7 +98,7 @@ void ArduinoHttpServer::StreamHttpErrorReply::send(const String& data)
    }
    else
    {
-      body = getHtmlBody(data);
+      body = data;
    }
 
    AbstractStreamHttpReply::send(body, data);
