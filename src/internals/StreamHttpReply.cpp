@@ -10,8 +10,6 @@
 
 //------------------------------------------------------------------------------
 //! \brief Constructor.
-const String ArduinoHttpServer::AbstractStreamHttpReply::DEFAULT_CONTENT_TYPE = "text/html";
-
 ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stream, const String& contentType, const String& code) :
    m_stream(stream),
    m_contentType(contentType),
@@ -22,22 +20,23 @@ ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stre
 
 //------------------------------------------------------------------------------
 //! \brief Send this reply / print this reply to stream.
+//! \todo: Accept char* also for data coming directly from flash.
 void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const String& title)
 {
    // Read away remaining bytes.
    while(getStream().read()>=0);
 
    String httpErrorReply;
-   httpErrorReply += F("HTTP/1.1 ");
+   httpErrorReply += AHS_F("HTTP/1.1 ");
    httpErrorReply += getCode() + " ";
    httpErrorReply += title + "\r\n";
-   httpErrorReply += F("Connection: close\r\n");
-   httpErrorReply += F("Content-Length: ");
-   httpErrorReply += data.length(); httpErrorReply += F("\r\n");
-   httpErrorReply += F("Content-Type: "); httpErrorReply += m_contentType; httpErrorReply+= F("\r\n");
-   httpErrorReply += F("\r\n");
+   httpErrorReply += AHS_F("Connection: close\r\n");
+   httpErrorReply += AHS_F("Content-Length: ");
+   httpErrorReply += data.length(); httpErrorReply += AHS_F("\r\n");
+   httpErrorReply += AHS_F("Content-Type: "); httpErrorReply += m_contentType; httpErrorReply+= AHS_F("\r\n");
+   httpErrorReply += AHS_F("\r\n");
    httpErrorReply += data;
-   httpErrorReply += F("\r\n");
+   httpErrorReply += AHS_F("\r\n");
 
    DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
    getStream().print(httpErrorReply);
@@ -59,7 +58,7 @@ const String& ArduinoHttpServer::AbstractStreamHttpReply::getContentType()
 {
    if(m_contentType.length()<=0)
    {
-      m_contentType = DEFAULT_CONTENT_TYPE;
+      m_contentType = CONTENT_TYPE_TEXT_HTML; // Default content type.
    }
    return m_contentType;
 }
@@ -89,11 +88,11 @@ void ArduinoHttpServer::StreamHttpErrorReply::send(const String& data)
 {
    String body;
 
-   if(getContentType() == "text/plain")
+   if(getContentType() == CONTENT_TYPE_TEXT_HTML)
    {
       body = data;
    }
-   else if(getContentType() == "application/json")
+   else if(getContentType() == CONTENT_TYPE_APPLICATION_JSON)
    {
       body = getJsonBody(data);
    }
@@ -109,13 +108,13 @@ void ArduinoHttpServer::StreamHttpErrorReply::send(const String& data)
 String ArduinoHttpServer::StreamHttpErrorReply::getHtmlBody(const String& data)
 {
    String body;
-   body += F("<html><head><title>Error: ");
+   body += AHS_F("<html><head><title>Error: ");
    body += getCode();
-   body += F("</title></head><body><h3>Error ");
+   body += AHS_F("</title></head><body><h3>Error ");
    body += getCode();
-   body += F(": ");
+   body += AHS_F(": ");
    body += data;
-   body += F("</h3></body></html>");
+   body += AHS_F("</h3></body></html>");
 
    return body;
 }
@@ -127,9 +126,9 @@ String ArduinoHttpServer::StreamHttpErrorReply::getJsonBody(const String& data)
    dataCopy.replace("\"", "\\\"");
 
    String body;
-   body += F("{\"Error\": \"");
+   body += AHS_F("{\"Error\": \"");
    body +=dataCopy;
-   body += F("\"}");
+   body += AHS_F("\"}");
 
    return body;
 }

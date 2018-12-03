@@ -12,6 +12,8 @@
 
 #include <Arduino.h>
 
+#include "ArduinoHttpServerDebug.h"
+
 namespace ArduinoHttpServer
 {
 
@@ -31,8 +33,10 @@ protected:
    virtual const String& getCode();
    virtual const String& getContentType();
 
+   constexpr static const char* CONTENT_TYPE_TEXT_HTML PROGMEM = "text/html";
+   constexpr static const char* CONTENT_TYPE_APPLICATION_JSON PROGMEM = "application/json";
+
 private:
-   static const String DEFAULT_CONTENT_TYPE;
 
    Stream& m_stream;
    String m_contentType; //!< Needs to be overridden to default when required. Therefore not const.
@@ -63,7 +67,7 @@ class StreamHttpReply: public AbstractStreamHttpReply
 {
 public:
     StreamHttpReply(Stream& stream, const String& contentType);
-    virtual void send(const String& data) { AbstractStreamHttpReply::send(data, "OK"); };
+    virtual void send(const String& data, const bool gzipencoded=false) { AbstractStreamHttpReply::send(data, "OK"); };
 };
 
 

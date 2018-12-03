@@ -8,11 +8,18 @@
 //! Debug support
 
 //#define ARDUINO_HTTP_SERVER_DEBUG
-
 #ifdef ARDUINO_HTTP_SERVER_DEBUG
    #define DEBUG_ARDUINO_HTTP_SERVER_PRINT(...) Serial.print(__VA_ARGS__)
    #define DEBUG_ARDUINO_HTTP_SERVER_PRINTLN(...) Serial.println(__VA_ARGS__)
 #else
    #define DEBUG_ARDUINO_HTTP_SERVER_PRINT(...)
    #define DEBUG_ARDUINO_HTTP_SERVER_PRINTLN(...)
+#endif
+
+
+//#define ARDUINO_HTTP_SERVER_NO_FLASH
+#ifdef ARDUINO_HTTP_SERVER_NO_FLASH
+   #define AHS_F(x) (x)
+#else
+   #define AHS_F(x) F(x)
 #endif

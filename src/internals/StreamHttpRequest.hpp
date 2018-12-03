@@ -344,23 +344,23 @@ const ArduinoHttpServer::ErrorString ArduinoHttpServer::StreamHttpRequest<MAX_BO
          break;
 
       case Error::TIMEOUT:
-         errorString = F("Timeout occurred while waiting for data");
+         errorString = AHS_F("Timeout occurred while waiting for data");
          break;
 
       case Error::CANNOT_HANDLE_HTTP_METHOD:
-         errorString = F("Don't know how to handle HTTP method: \"");
+         errorString = AHS_F("Don't know how to handle HTTP method: \"");
          errorString += m_errorDetail;
-         errorString += F("\"");
+         errorString += AHS_F("\"");
          break;
 
       case Error::PARSE_ERROR_INVALID_HTTP_VERSION:
-         errorString = F("Invalid HTTP version: \"");
+         errorString = AHS_F("Invalid HTTP version: \"");
          errorString += m_errorDetail;
-         errorString += F("\"");
+         errorString += AHS_F("\"");
          break;
 
       case Error::PARSE_ERROR_NO_RESOURCE:
-         errorString = F("No resource specified.");
+         errorString = AHS_F("No resource specified.");
          break;
 
       default:
