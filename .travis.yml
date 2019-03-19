@@ -34,7 +34,7 @@ env:
 
 install:
     - pip install -U platformio
-    - platformio lib -g install WiFi
+    #- platformio lib -g install WiFi
 
 script:
-    - platformio ci --lib="." --board=esp01 --board=uno
+    - platformio ci --lib="." --board=esp01 #--board=uno
