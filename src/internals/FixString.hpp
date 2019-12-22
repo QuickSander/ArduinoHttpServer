@@ -101,7 +101,7 @@ ArduinoHttpServer::FixString<MAX_SIZE>::FixString(const char* pCStr, size_t len)
 
    if( (len != NPOS) && (len < (MAX_SIZE-1)) )
    {
-      len = len;
+      //len = len;
    }
    else
    {
@@ -210,7 +210,7 @@ bool ArduinoHttpServer::FixString<MAX_SIZE>::equalsIgnoreCase(const char *pCompa
       return true;
    }
    char* p1(m_buffer); // Copy pointer.
-   char* p2(pCompareTo);
+   const char* p2(pCompareTo);
 
    while (*p1)
    {
