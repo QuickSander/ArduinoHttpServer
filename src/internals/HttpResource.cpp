@@ -37,7 +37,8 @@ bool ArduinoHttpServer::HttpResource::isValid()
 
 //! Retrieve resource part at the specified index.
 //! \details E.g. HttpResource("/api/sensors/1/state")[1]
-//!    returns "sensors"
+//!    returns "sensors".
+//! \returns Empty string when index specified is out of range. 
 String ArduinoHttpServer::HttpResource::operator[](const unsigned int index) const
 {
    int fromOffset(0);
@@ -46,12 +47,20 @@ String ArduinoHttpServer::HttpResource::operator[](const unsigned int index) con
    for (unsigned int currentIndex=0; currentIndex <= index; ++currentIndex)
    {
       fromOffset = m_resource.indexOf(RESOURCE_SEPERATOR, fromOffset);
+      if(fromOffset == -1)
+      {
+         return String("");
+      }
+
       ++fromOffset; // Seek past '/'.
    }
 
    // Find next possible '/' or end.
    int toOffset( m_resource.indexOf(RESOURCE_SEPERATOR, fromOffset) );
-   toOffset == -1 ? m_resource.length() - 1 : toOffset;
+   if(toOffset == -1)
+   {
+      toOffset = m_resource.length();
+   }
 
    return m_resource.substring(fromOffset, toOffset);
 
