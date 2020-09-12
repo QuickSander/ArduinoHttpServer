@@ -72,6 +72,7 @@ void loop()
 
          httpReply.send( errorStr );
       }
+      client.stop();
    }
 
 }

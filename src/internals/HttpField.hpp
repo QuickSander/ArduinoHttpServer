@@ -26,7 +26,8 @@ public:
       NOT_SUPPORTED,
       CONTENT_TYPE,
       CONTENT_LENGTH,
-      USER_AGENT
+      USER_AGENT,
+      AUTHORIZATION
    };
 
    HttpField(const char* fieldLine);
@@ -49,6 +50,7 @@ private:
    static const char* CONTENT_TYPE_STR;
    static const char* CONTENT_LENGTH_TYPE_STR;
    static const char* USER_AGENT_TYPE_STR;
+   static const char* AUTHORIZATION_TYPE_STR;
 
    Type m_type;
    String m_value;

@@ -32,8 +32,11 @@ void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const 
    httpErrorReply += title + "\r\n";
    httpErrorReply += AHS_F("Connection: close\r\n");
    httpErrorReply += AHS_F("Content-Length: ");
-   httpErrorReply += data.length(); httpErrorReply += AHS_F("\r\n");
-   httpErrorReply += AHS_F("Content-Type: "); httpErrorReply += m_contentType; httpErrorReply+= AHS_F("\r\n");
+   httpErrorReply += data.length();
+   httpErrorReply += AHS_F("\r\n");
+   httpErrorReply += AHS_F("Content-Type: ");
+   httpErrorReply += m_contentType;
+   httpErrorReply += AHS_F("\r\n");
    httpErrorReply += AHS_F("\r\n");
    httpErrorReply += data;
    httpErrorReply += AHS_F("\r\n");
@@ -131,4 +134,30 @@ String ArduinoHttpServer::StreamHttpErrorReply::getJsonBody(const String& data)
    body += AHS_F("\"}");
 
    return body;
+}
+
+//------------------------------------------------------------------------------
+//                             Class Definition
+//------------------------------------------------------------------------------
+
+ArduinoHttpServer::StreamHttpAuthenticateReply::StreamHttpAuthenticateReply(Stream& stream, const String& contentType) :
+   AbstractStreamHttpReply(stream, contentType, "401")
+{
+
+}
+
+void ArduinoHttpServer::StreamHttpAuthenticateReply::send()
+{
+   // Read away remaining bytes.
+   while(getStream().read()>=0);
+
+   DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
+   getStream().println(AHS_F("HTTP/1.1 401 Unauthorized"));
+   getStream().println(AHS_F("WWW-Authenticate: Basic realm=\"Login Required\""));
+   getStream().println(AHS_F("Connection: close"));
+   getStream().println(AHS_F(""));
+   getStream().println(AHS_F("<HTML><HEAD><TITLE>401 Unauthorized</TITLE></HEAD><BODY BGCOLOR=\"#cc9999\"><H4>401 Unauthorized</H4>Authorization required.</BODY></HTML>"));
+   getStream().println(AHS_F(""));
+   getStream().println(AHS_F(""));
+   DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
 }

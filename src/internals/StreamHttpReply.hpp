@@ -62,6 +62,18 @@ protected:
 //------------------------------------------------------------------------------
 //                             Class Declaration
 //------------------------------------------------------------------------------
+//! Authenticate reply
+class StreamHttpAuthenticateReply: public AbstractStreamHttpReply
+{
+public:
+    StreamHttpAuthenticateReply(Stream& stream, const String& contentType);
+    virtual void send();
+};
+
+
+//------------------------------------------------------------------------------
+//                             Class Declaration
+//------------------------------------------------------------------------------
 //! Normal reply.
 class StreamHttpReply: public AbstractStreamHttpReply
 {
