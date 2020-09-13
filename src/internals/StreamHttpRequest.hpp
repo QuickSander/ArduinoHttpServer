@@ -407,7 +407,7 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::authenticate(const cha
    char encodedString[encodedLength];
    Base64.encode(encodedString, combinedInput.c_str(), combinedInput.length());
    
-   if (strcmp(authData.c_str()+6,encodedString) == 0)
+   if (strcmp(m_authorizationField.getValueAsString().c_str()+6,encodedString) == 0)
    {
       return true;
    }
