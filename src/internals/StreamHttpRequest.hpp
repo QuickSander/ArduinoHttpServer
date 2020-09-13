@@ -17,7 +17,7 @@
 #include "ArduinoHttpServerDebug.h"
 
 #include <Arduino.h>
-#include <base64.h>
+#include <Base64.h>
 
 #include <string.h>
 
