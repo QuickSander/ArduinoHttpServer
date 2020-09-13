@@ -65,8 +65,8 @@ public:
     const ErrorString getError() const;
     Stream& getStream() { return m_stream; };
 
-   // Check if authenticated request
-   bool authenticate(const char * username, const char * password) const;
+    // Check if authenticated request
+    bool authenticate(const char * username, const char * password) const;
 
 private:
 
@@ -392,7 +392,6 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::authenticate(const cha
       DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("Unsupported auth header");
       return false;
    }
-   String authData = m_authorizationField.getValueAsString().substring(6);
 
    String combinedInput;
    if (!combinedInput.reserve(strlen(username) + strlen(password) + 2))
@@ -407,8 +406,8 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::authenticate(const cha
    int encodedLength = Base64.encodedLength(combinedInput.length());
    char encodedString[encodedLength];
    Base64.encode(encodedString, combinedInput.c_str(), combinedInput.length());
-
-   if (authData == encodedString)
+   
+   if (strcmp(authData.c_str()+6,encodedString) == 0)
    {
       return true;
    }
