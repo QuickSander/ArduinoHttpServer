@@ -14,6 +14,7 @@ const char* ArduinoHttpServer::HttpField::SEPERATOR = ": ";
 const char* ArduinoHttpServer::HttpField::CONTENT_TYPE_STR = "Content-Type";
 const char* ArduinoHttpServer::HttpField::CONTENT_LENGTH_TYPE_STR = "Content-Length";
 const char* ArduinoHttpServer::HttpField::USER_AGENT_TYPE_STR = "User-Agent";
+const char* ArduinoHttpServer::HttpField::AUTHORIZATION_TYPE_STR = "Authorization";
 
 
 ArduinoHttpServer::HttpField::HttpField(const char* fieldLine) :
@@ -65,6 +66,10 @@ void ArduinoHttpServer::HttpField::determineType(const String& typeStr)
    else if (typeStr.equalsIgnoreCase(USER_AGENT_TYPE_STR))
    {
       m_type = Type::USER_AGENT;
+   }
+   else if (typeStr.equalsIgnoreCase(AUTHORIZATION_TYPE_STR))
+   {
+      m_type = Type::AUTHORIZATION;
    }
 }
 

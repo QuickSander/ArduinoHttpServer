@@ -17,6 +17,7 @@
 #include "ArduinoHttpServerDebug.h"
 
 #include <Arduino.h>
+#include <Base64.h>
 
 #include <string.h>
 
@@ -64,6 +65,9 @@ public:
     const ErrorString getError() const;
     Stream& getStream() { return m_stream; };
 
+    // Check if authenticated request
+    bool authenticate(const char * username, const char * password) const;
+
 private:
 
    enum class Error: char {
@@ -100,6 +104,7 @@ private:
    ArduinoHttpServer::HttpVersion m_version;
    ArduinoHttpServer::HttpField m_contentTypeField;
    ArduinoHttpServer::HttpField m_contentLengthField;
+   ArduinoHttpServer::HttpField m_authorizationField;
 
    Error m_error;
    ErrorMessageString m_errorDetail;
@@ -321,6 +326,10 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseField(char lineBu
    {
       m_contentLengthField = httpField;
    }
+   else if(httpField.getType() == ArduinoHttpServer::HttpField::Type::AUTHORIZATION)
+   {
+      m_authorizationField = httpField;
+   }
    else
    {
       // Ignore other fields for now.
@@ -370,6 +379,40 @@ const ArduinoHttpServer::ErrorString ArduinoHttpServer::StreamHttpRequest<MAX_BO
    return errorString;
 }
 
+template <size_t MAX_BODY_SIZE>
+bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::authenticate(const char * username, const char * password) const
+{
+   if (m_authorizationField.getType() == HttpField::Type::NOT_SUPPORTED)
+   {
+      return false;
+   }
 
+   if (!m_authorizationField.getValueAsString().startsWith("Basic"))
+   {
+      DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("Unsupported auth header");
+      return false;
+   }
+
+   String combinedInput;
+   if (!combinedInput.reserve(strlen(username) + strlen(password) + 2))
+   {
+      DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("Not enough memory");
+      return false;
+   }
+   combinedInput += username;
+   combinedInput += AHS_F(":");
+   combinedInput += password;
+
+   int encodedLength = Base64.encodedLength(combinedInput.length());
+   char encodedString[encodedLength];
+   Base64.encode(encodedString, combinedInput.c_str(), combinedInput.length());
+   
+   if (strcmp(m_authorizationField.getValueAsString().c_str()+6,encodedString) == 0)
+   {
+      return true;
+   }
+
+   return false;
+}
 
 #endif // __ArduinoHttpServer__StreamHttpRequest__
