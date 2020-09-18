@@ -26,23 +26,17 @@ void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const 
    // Read away remaining bytes.
    while(getStream().read()>=0);
 
-   String httpErrorReply;
-   httpErrorReply += AHS_F("HTTP/1.1 ");
-   httpErrorReply += getCode() + " ";
-   httpErrorReply += title + "\r\n";
-   httpErrorReply += AHS_F("Connection: close\r\n");
-   httpErrorReply += AHS_F("Content-Length: ");
-   httpErrorReply += data.length();
-   httpErrorReply += AHS_F("\r\n");
-   httpErrorReply += AHS_F("Content-Type: ");
-   httpErrorReply += m_contentType;
-   httpErrorReply += AHS_F("\r\n");
-   httpErrorReply += AHS_F("\r\n");
-   httpErrorReply += data;
-   httpErrorReply += AHS_F("\r\n");
-
    DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
-   getStream().print(httpErrorReply);
+
+   getStream().print( AHS_F("HTTP/1.1 ") );
+   getStream().print( getCode() + " ");
+   getStream().print( title + "\r\n" );
+   getStream().print( AHS_F("Connection: close\r\n") );
+   getStream().print( AHS_F("Content-Length: ") ); getStream().print( data.length()); getStream().print( AHS_F("\r\n") );
+   getStream().print( AHS_F("Content-Type: ") ); getStream().print( m_contentType ); getStream().print( AHS_F("\r\n") );
+   getStream().print( AHS_F("\r\n") );
+   getStream().print( data ); getStream().print( AHS_F("\r\n") );
+
    DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
 }
 
@@ -151,12 +145,12 @@ void ArduinoHttpServer::StreamHttpAuthenticateReply::send()
    // Read away remaining bytes.
    while(getStream().read()>=0);
 
-   DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
+   DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing authenticate reply ... ");
    getStream().println(AHS_F("HTTP/1.1 401 Unauthorized"));
    getStream().println(AHS_F("WWW-Authenticate: Basic realm=\"Login Required\""));
    getStream().println(AHS_F("Connection: close"));
    getStream().println(AHS_F(""));
-   getStream().println(AHS_F("<HTML><HEAD><TITLE>401 Unauthorized</TITLE></HEAD><BODY BGCOLOR=\"#cc9999\"><H4>401 Unauthorized</H4>Authorization required.</BODY></HTML>"));
+   getStream().println(AHS_F("<html><head><title>401 Unauthorized</title></head><body><h4>401 Unauthorized</h4>Authorization required.</body></html>"));
    getStream().println(AHS_F(""));
    getStream().println(AHS_F(""));
    DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");

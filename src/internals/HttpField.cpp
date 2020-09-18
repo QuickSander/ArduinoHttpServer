@@ -11,6 +11,7 @@
 #include "ArduinoHttpServerDebug.h"
 
 const char* ArduinoHttpServer::HttpField::SEPERATOR = ": ";
+const char* ArduinoHttpServer::HttpField::SUB_VALUE_SEPERATOR = " ";
 const char* ArduinoHttpServer::HttpField::CONTENT_TYPE_STR = "Content-Type";
 const char* ArduinoHttpServer::HttpField::CONTENT_LENGTH_TYPE_STR = "Content-Length";
 const char* ArduinoHttpServer::HttpField::USER_AGENT_TYPE_STR = "User-Agent";
@@ -78,3 +79,32 @@ const ArduinoHttpServer::HttpField::Type ArduinoHttpServer::HttpField::getType()
 {
    return m_type;
 }
+
+//! \brief Retrieve part of a value indicated by a zero based index.
+//! \details Retrieve "username:password" from "Basic username:password": call with subValueIndex 1.
+const ArduinoHttpServer::HttpField::SubValueString ArduinoHttpServer::HttpField::getSubValueString(size_t subValueIndex) const
+{
+   SubValueString subValue;
+   auto startIndex(0);
+   auto endIndex(0);
+
+   for(auto currentSubValueIndex=0U; currentSubValueIndex < subValueIndex; currentSubValueIndex++)
+   {
+      endIndex = m_value.indexOf(SUB_VALUE_SEPERATOR, startIndex);
+
+      // If separator has been found.
+      if(endIndex >=0)
+      {
+         subValue = m_value.substring(startIndex + strlen(SUB_VALUE_SEPERATOR), endIndex);
+         startIndex = endIndex;
+      }
+      else
+      {
+         subValue = m_value.substring(startIndex);
+      }
+   }
+      
+
+   return subValue;
+}
+

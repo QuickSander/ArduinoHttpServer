@@ -41,6 +41,7 @@ public:
    // Assignment
    FixString<MAX_SIZE>& operator=(const char* pCStr);
    FixString<MAX_SIZE>& operator=(const __FlashStringHelper * str);
+   FixString<MAX_SIZE>& operator=(const String& arduinostr);
    template<size_t RHS_SIZE> FixString<MAX_SIZE>& operator=(const FixString<RHS_SIZE>& fixStr);
    // We need this since move constructor implicitely declares assignment operators private.
    FixString<MAX_SIZE>& operator=(const FixString<MAX_SIZE>& fixStr) = default;
@@ -160,6 +161,15 @@ ArduinoHttpServer::FixString<MAX_SIZE>& ArduinoHttpServer::FixString<MAX_SIZE>::
 {
    return (*this = FixString<MAX_SIZE>(pFlashStr));
 }
+
+//------------------------------------------------------------------------------
+//! \brief Assignment operator for Arduino Strings.
+template <size_t MAX_SIZE>
+ArduinoHttpServer::FixString<MAX_SIZE>& ArduinoHttpServer::FixString<MAX_SIZE>::operator=(const String& arduinostr)
+{
+   return (*this = FixString<MAX_SIZE>(arduinostr));
+}
+
 
 //------------------------------------------------------------------------------
 //! \brief Assignment operator

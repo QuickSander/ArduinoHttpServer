@@ -85,6 +85,8 @@ private:
    static const long LINE_READ_TIMEOUT_MS = 10000L; //!< [ms] Wait 10s for reception of a complete line.
    static const int MAX_RETRIES_WAIT_DATA_AVAILABLE = 255;
 
+   constexpr static const char* BASIC_AUTH_TYPE_STR = "Basic";
+
    void parseRequest(char lineBuffer[MAX_LINE_SIZE]);
    void parseMethod(char lineBuffer[MAX_LINE_SIZE]);
    void parseResource();
@@ -380,34 +382,30 @@ const ArduinoHttpServer::ErrorString ArduinoHttpServer::StreamHttpRequest<MAX_BO
 }
 
 template <size_t MAX_BODY_SIZE>
-bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::authenticate(const char * username, const char * password) const
+bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::authenticate(const char *username, const char *password) const
 {
    if (m_authorizationField.getType() == HttpField::Type::NOT_SUPPORTED)
    {
       return false;
    }
 
-   if (!m_authorizationField.getValueAsString().startsWith("Basic"))
+   // HTTP value: "<Type> <Base 64 encoded credentials>"
+   // Retrieve type and verify wether it is basic authorization.
+   if(!(m_authorizationField.getSubValueString(0) == BASIC_AUTH_TYPE_STR))
    {
-      DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("Unsupported auth header");
+      DEBUG_ARDUINO_HTTP_SERVER_PRINT("Unsupported authentication header: ");
+      DEBUG_ARDUINO_HTTP_SERVER_PRINTLN(m_authorizationField);
       return false;
    }
 
-   String combinedInput;
-   if (!combinedInput.reserve(strlen(username) + strlen(password) + 2))
-   {
-      DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("Not enough memory");
-      return false;
-   }
-   combinedInput += username;
-   combinedInput += AHS_F(":");
-   combinedInput += password;
+   FixString<128U> combinedInput;
+   combinedInput += username; combinedInput += AHS_F(":"); combinedInput += password;
 
-   int encodedLength = Base64.encodedLength(combinedInput.length());
-   char encodedString[encodedLength];
-   Base64.encode(encodedString, combinedInput.c_str(), combinedInput.length());
+   const int encodedLength = Base64.encodedLength(combinedInput.length());
+   char encodedString[encodedLength] = {0};
+   Base64.encode(encodedString, combinedInput.cStr(), combinedInput.length());
    
-   if (strcmp(m_authorizationField.getValueAsString().c_str()+6,encodedString) == 0)
+   if ( m_authorizationField.getSubValueString(1) == encodedString )
    {
       return true;
    }

@@ -10,6 +10,8 @@
 #ifndef __ArduinoHttpServer__HttpField__
 #define __ArduinoHttpServer__HttpField__
 
+#include "FixString.hpp"
+
 #include "Arduino.h"
 
 namespace ArduinoHttpServer
@@ -20,6 +22,8 @@ class HttpField
 {
 
 public:
+
+   using SubValueString = FixString<128>;
 
    enum class Type: char
    {
@@ -41,12 +45,14 @@ public:
    const Type getType() const;
 
    inline const String& getValueAsString() const {return m_value; };
+   const SubValueString getSubValueString(size_t subValueIndex) const;
    inline const int getValueAsInt() const {return m_value.toInt(); };
 
 private:
    void determineType(const String& typeStr);
 
    static const char *SEPERATOR;
+   static const char* SUB_VALUE_SEPERATOR;
    static const char* CONTENT_TYPE_STR;
    static const char* CONTENT_LENGTH_TYPE_STR;
    static const char* USER_AGENT_TYPE_STR;
