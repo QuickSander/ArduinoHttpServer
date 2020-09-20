@@ -5,7 +5,8 @@
     "authors":
     {
       "name": "Sander van Woensel",
-      "url": "http://sander.technology"
+      "url": "http://sander.technology",
+      "maintainer": true
     },
     "version": "0.9.6",
     "repository":

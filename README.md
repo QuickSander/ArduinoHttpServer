@@ -52,3 +52,4 @@ Characteristics
 * Customizable memory footprint for caching returned body data.
 * No external dependencies outside of the standard Arduino framework.
 * Object oriented implementation.
+* Basic authorization support (initial version by @BlueAndi)
