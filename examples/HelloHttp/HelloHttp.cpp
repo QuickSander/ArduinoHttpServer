@@ -1,5 +1,8 @@
 #include <ArduinoHttpServer.h>
 
+#include <Arduino.h>
+
+
 #ifdef ESP8266 // This example is compatible with both, ATMega and ESP8266
    #include <ESP8266WiFi.h>
 #else
@@ -7,8 +10,8 @@
    #include <WiFi.h>
 #endif
 
-const char* ssid = "";
-const char* password = "";
+const char* ssid = "shockwave (2.4GHz)";
+const char* password = "oz8kY3Pksxc";
 
 WiFiServer wifiServer(80);
 
@@ -44,22 +47,31 @@ void loop()
 
          // Retrieve 2nd part of HTTP resource.
          // E.g.: "on" from "/api/sensors/on"
-         Serial.println( httpRequest.getResource()[2] );
+         Serial.println(httpRequest.getResource()[2]);
 
          // Retrieve HTTP method.
          // E.g.: GET / PUT / HEAD / DELETE / POST
          ArduinoHttpServer::Method method( ArduinoHttpServer::Method::Invalid );
          method = httpRequest.getMethod();
 
-         if( method == ArduinoHttpServer::Method::Get )
+         // Optionally athenticate incoming request
+         if(!httpRequest.authenticate("user", "secret"))
          {
-            Serial.println("Nothing to get here.");
+            ArduinoHttpServer::StreamHttpAuthenticateReply httpReply(client, httpRequest.getContentType());
+            httpReply.send();
          }
-         else if( method == ArduinoHttpServer::Method::Put )
+         else
          {
-            digitalWrite(13, HIGH);
+            if( method == ArduinoHttpServer::Method::Get )
+            {
+               Serial.println("Nothing to get here.");
+            }
+            else if( method == ArduinoHttpServer::Method::Put )
+            {
+               Serial.println("Writing HIGH to digital pin 13.");
+               digitalWrite(13, HIGH);
+            }
          }
-
       }
       else
       {

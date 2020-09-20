@@ -65,7 +65,7 @@ public:
     const ErrorString getError() const;
     Stream& getStream() { return m_stream; };
 
-    // Check if authenticated request
+    // Validate if client provided credentials match _username_ and _password_.
     bool authenticate(const char * username, const char * password) const;
 
 private:
@@ -84,8 +84,6 @@ private:
    static const int MAX_BODY_LENGTH = MAX_BODY_SIZE-1; //!< Byte size of array. Leaves space for terminating \0.
    static const long LINE_READ_TIMEOUT_MS = 10000L; //!< [ms] Wait 10s for reception of a complete line.
    static const int MAX_RETRIES_WAIT_DATA_AVAILABLE = 255;
-
-   constexpr static const char* BASIC_AUTH_TYPE_STR = "Basic";
 
    void parseRequest(char lineBuffer[MAX_LINE_SIZE]);
    void parseMethod(char lineBuffer[MAX_LINE_SIZE]);
@@ -391,20 +389,25 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::authenticate(const cha
 
    // HTTP value: "<Type> <Base 64 encoded credentials>"
    // Retrieve type and verify wether it is basic authorization.
-   if(!(m_authorizationField.getSubValueString(0) == BASIC_AUTH_TYPE_STR))
+   if(!(m_authorizationField.getSubValueString(0) == HttpField::BASIC_AUTH_TYPE_STR))
    {
-      DEBUG_ARDUINO_HTTP_SERVER_PRINT("Unsupported authentication header: ");
-      DEBUG_ARDUINO_HTTP_SERVER_PRINTLN(m_authorizationField);
+      DEBUG_ARDUINO_HTTP_SERVER_PRINT("Unsupported authentication type: ");
+      DEBUG_ARDUINO_HTTP_SERVER_PRINTLN(m_authorizationField.getSubValueString(0).cStr());
       return false;
    }
 
-   FixString<128U> combinedInput;
-   combinedInput += username; combinedInput += AHS_F(":"); combinedInput += password;
+   FixString<128U> combinedInput(username);
+   combinedInput += AHS_F(":");
+   combinedInput += password;
 
    const int encodedLength = Base64.encodedLength(combinedInput.length());
-   char encodedString[encodedLength] = {0};
-   Base64.encode(encodedString, combinedInput.cStr(), combinedInput.length());
+
+   char encodedString[encodedLength+1]; // Base64 makes sure _encodedString_ is zero terminated.
+   Base64.encode(encodedString, const_cast<char*>(combinedInput.cStr()), combinedInput.length());
    
+   DEBUG_ARDUINO_HTTP_SERVER_PRINT("Credentials string in client supplied auth: ");
+   DEBUG_ARDUINO_HTTP_SERVER_PRINTLN(m_authorizationField.getSubValueString(1).cStr() );
+
    if ( m_authorizationField.getSubValueString(1) == encodedString )
    {
       return true;

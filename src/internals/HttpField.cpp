@@ -82,21 +82,21 @@ const ArduinoHttpServer::HttpField::Type ArduinoHttpServer::HttpField::getType()
 
 //! \brief Retrieve part of a value indicated by a zero based index.
 //! \details Retrieve "username:password" from "Basic username:password": call with subValueIndex 1.
-const ArduinoHttpServer::HttpField::SubValueString ArduinoHttpServer::HttpField::getSubValueString(size_t subValueIndex) const
+const ArduinoHttpServer::HttpField::SubValueStringT ArduinoHttpServer::HttpField::getSubValueString(size_t subValueIndex) const
 {
-   SubValueString subValue;
+   SubValueStringT subValue;
    auto startIndex(0);
    auto endIndex(0);
 
-   for(auto currentSubValueIndex=0U; currentSubValueIndex < subValueIndex; currentSubValueIndex++)
+   for(auto currentSubValueIndex=0U; currentSubValueIndex <= subValueIndex; currentSubValueIndex++)
    {
       endIndex = m_value.indexOf(SUB_VALUE_SEPERATOR, startIndex);
 
       // If separator has been found.
       if(endIndex >=0)
       {
-         subValue = m_value.substring(startIndex + strlen(SUB_VALUE_SEPERATOR), endIndex);
-         startIndex = endIndex;
+         subValue = m_value.substring(startIndex + strlen(SUB_VALUE_SEPERATOR) - 1, endIndex);
+         startIndex = endIndex+1; // One past the found string.
       }
       else
       {
