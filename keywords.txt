@@ -12,3 +12,4 @@ StreamHttpErrorReply	KEYWORD1
 StreamHttpAuthenticateReply KEYWORD1
 send	KEYWORD2
 getCode	KEYWORD2
+authenticate KEYWORD1
