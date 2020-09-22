@@ -10,8 +10,8 @@
    #include <WiFi.h>
 #endif
 
-const char* ssid = "***REMOVED***";
-const char* password = "***REMOVED***";
+const char* ssid = "";
+const char* password = "";
 
 WiFiServer wifiServer(80);
 
