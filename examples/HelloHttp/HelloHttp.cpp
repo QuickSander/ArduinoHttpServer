@@ -10,8 +10,8 @@
    #include <WiFi.h>
 #endif
 
-const char* ssid = "shockwave (2.4GHz)";
-const char* password = "oz8kY3Pksxc";
+const char* ssid = "";
+const char* password = "";
 
 WiFiServer wifiServer(80);
 
