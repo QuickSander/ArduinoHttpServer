@@ -12,7 +12,7 @@
 
 #include "FixString.hpp"
 
-#include "Arduino.h"
+#include "WString.h"
 
 namespace ArduinoHttpServer
 {
