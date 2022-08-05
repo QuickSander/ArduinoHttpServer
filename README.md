@@ -1,6 +1,6 @@
 # ArduinoHttpServer
 
-![GitHub Actions](https://github.com/github/QuickSander/ArduinoHttpServer/workflows/main.yml/badge.svg)
+![GitHub Actions](https://github.com/QuickSander/ArduinoHttpServer/actions/workflows/main.yml/badge.svg)
 [![Code Climate](https://codeclimate.com/github/QuickSander/ArduinoHttpServer/badges/gpa.svg)](https://codeclimate.com/github/QuickSander/ArduinoHttpServer)
 [![Test Coverage](https://codeclimate.com/github/QuickSander/ArduinoHttpServer/badges/coverage.svg)](https://codeclimate.com/github/QuickSander/ArduinoHttpServer/coverage)
 

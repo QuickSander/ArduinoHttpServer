@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         default_example: [examples/HelloHttp/HelloHttp.cpp]
-        no_flash_no_auth_example: [examples/HelloHttp/HelloHttp.cpp]
+        no_flash_no_auth_example: [examples/HelloHttpNoFlashNoAuth/HelloNoFlashNoAuthHttp.cpp]
 
     steps:
     - uses: actions/checkout@v2
@@ -37,7 +37,7 @@ jobs:
     - name: Run PlatformIO - No Auth, No Flash Example 
       run: pio ci --lib="." --project-conf="platformio.ini"
       env:
-        PLATFORMIO_CI_SRC: ${{ matrix.example }}
+        PLATFORMIO_CI_SRC: ${{ matrix.no_flash_no_auth_example }}
         PLATFORMIO_BUILD_FLAGS: -D ARDUINO_HTTP_SERVER_NO_FLASH -D ARDUINO_HTTP_SERVER_NO_BASIC_AUTH
 
 
