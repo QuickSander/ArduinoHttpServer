@@ -17,7 +17,9 @@
 #include "ArduinoHttpServerDebug.h"
 
 #include <Arduino.h>
-#include <Base64.h>
+#ifndef ARDUINO_HTTP_SERVER_NO_BASIC_AUTH
+   #include <Base64.h>
+#endif
 
 #include <string.h>
 
@@ -66,7 +68,9 @@ public:
     Stream& getStream() { return m_stream; };
 
     // Validate if client provided credentials match _username_ and _password_.
+    #ifndef ARDUINO_HTTP_SERVER_NO_BASIC_AUTH
     bool authenticate(const char * username, const char * password) const;
+    #endif
 
 private:
 
@@ -379,6 +383,7 @@ const ArduinoHttpServer::ErrorString ArduinoHttpServer::StreamHttpRequest<MAX_BO
    return errorString;
 }
 
+#ifndef ARDUINO_HTTP_SERVER_NO_BASIC_AUTH
 template <size_t MAX_BODY_SIZE>
 bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::authenticate(const char *username, const char *password) const
 {
@@ -415,5 +420,6 @@ bool ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::authenticate(const cha
 
    return false;
 }
+#endif
 
 #endif // __ArduinoHttpServer__StreamHttpRequest__

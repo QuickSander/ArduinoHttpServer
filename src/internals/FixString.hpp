@@ -30,7 +30,9 @@ public:
 
    // Constructors
    explicit FixString(const char* pCStr="", size_t len=NPOS);
+   #ifndef ARDUINO_HTTP_SERVER_NO_FLASH
    explicit FixString(const __FlashStringHelper * pFlashStr);
+   #endif
    explicit FixString(const String& arduinoStr);
    template<size_t RHS_SIZE> FixString(const FixString<RHS_SIZE>& fixStr); // Not explicit to allow for normal conversions where only size differs.
    FixString(const FixString<MAX_SIZE>& fixStr) = default; // Not marked as "explicit" to allow normal return statements
@@ -40,7 +42,9 @@ public:
 
    // Assignment
    FixString<MAX_SIZE>& operator=(const char* pCStr);
+   #ifndef ARDUINO_HTTP_SERVER_NO_FLASH
    FixString<MAX_SIZE>& operator=(const __FlashStringHelper * str);
+   #endif
    FixString<MAX_SIZE>& operator=(const String& arduinostr);
    template<size_t RHS_SIZE> FixString<MAX_SIZE>& operator=(const FixString<RHS_SIZE>& fixStr);
    // We need this since move constructor implicitely declares assignment operators private.
@@ -60,7 +64,9 @@ public:
 
    // Modification
    FixString<MAX_SIZE>& operator+=(const char *pRhs);
+   #ifndef ARDUINO_HTTP_SERVER_NO_FLASH
    FixString<MAX_SIZE>& operator+=(const __FlashStringHelper *pRhs);
+   #endif
    template<size_t RHS_SIZE> FixString<MAX_SIZE>& operator+=(const FixString<RHS_SIZE>& rhs);
 
 
@@ -115,13 +121,14 @@ ArduinoHttpServer::FixString<MAX_SIZE>::FixString(const char* pCStr, size_t len)
 
 //------------------------------------------------------------------------------
 //! \brief Construct using Flash String pointer.
+#ifndef ARDUINO_HTTP_SERVER_NO_FLASH
 template <size_t MAX_SIZE>
 ArduinoHttpServer::FixString<MAX_SIZE>::FixString(const __FlashStringHelper * pFlashStr) :
    m_buffer{0}
 {
    strcpy_P(m_buffer, reinterpret_cast<PGM_P>(pFlashStr));
 }
-
+#endif
 
 //------------------------------------------------------------------------------
 //! \brief Construct using an Arduino String object.
@@ -156,11 +163,13 @@ ArduinoHttpServer::FixString<MAX_SIZE>& ArduinoHttpServer::FixString<MAX_SIZE>::
 
 //------------------------------------------------------------------------------
 //! \brief Assignment operator for Flash based strings.
+#ifndef ARDUINO_HTTP_SERVER_NO_FLASH
 template <size_t MAX_SIZE>
 ArduinoHttpServer::FixString<MAX_SIZE>& ArduinoHttpServer::FixString<MAX_SIZE>::operator=(const __FlashStringHelper * pFlashStr)
 {
    return (*this = FixString<MAX_SIZE>(pFlashStr));
 }
+#endif
 
 //------------------------------------------------------------------------------
 //! \brief Assignment operator for Arduino Strings.
@@ -291,12 +300,14 @@ ArduinoHttpServer::FixString<MAX_SIZE>& ArduinoHttpServer::FixString<MAX_SIZE>::
 
 //------------------------------------------------------------------------------
 //! \brief Concatenate with Flash String.
+#ifndef ARDUINO_HTTP_SERVER_NO_FLASH
 template <size_t MAX_SIZE>
 ArduinoHttpServer::FixString<MAX_SIZE>& ArduinoHttpServer::FixString<MAX_SIZE>::operator+=(const __FlashStringHelper *pRhs)
 {
    strncpy_P(m_buffer+length(), (PGM_P)pRhs, MAX_SIZE - length() - 1);
    return *this;
 }
+#endif
 
 //------------------------------------------------------------------------------
 //! \brief Concatenate FixString.

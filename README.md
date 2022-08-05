@@ -45,6 +45,15 @@ Documentation
 
 Documentation available in the [ArduinoHttpServer Github wiki](https://github.com/QuickSander/ArduinoHttpServer/wiki)
 
+### Compiler options
+The library can be adjusted to include less or more features depending on the board you use and your desires for hardware usage. Specify these in your project's ```platformio.ini``` via the [```build_flags```](https://docs.platformio.org/en/latest/projectconf/section_env_build.html#build-flags) argument or as ```#define``` in your source/header code before including ```ArduinoHttpServer.h```.
+
+| ```#define``` | Description |
+| ------------- | ----------- |
+| ```ARDUINO_HTTP_SERVER_DEBUG``` | Enable debug logging printed towards the default Serial port |
+| ```ARDUINO_HTTP_SERVER_NO_FLASH``` | Do not put string literals used inside the library's implementation in flash memory. Increases RAM usage, decreases flash usage. |
+| ```ARDUINO_HTTP_SERVER_NO_BASIC_AUTH``` | Disable HTTP basic authentication support. Removes the need for the Base64 library. |
+
 Characteristics
 ---------------
 * HTTP parser with protocol validation.

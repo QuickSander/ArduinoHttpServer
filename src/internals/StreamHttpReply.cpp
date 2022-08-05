@@ -134,6 +134,8 @@ String ArduinoHttpServer::StreamHttpErrorReply::getJsonBody(const String& data)
 //                             Class Definition
 //------------------------------------------------------------------------------
 
+#ifndef ARDUINO_HTTP_SERVER_NO_BASIC_AUTH
+
 ArduinoHttpServer::StreamHttpAuthenticateReply::StreamHttpAuthenticateReply(Stream& stream, const String& contentType) :
    AbstractStreamHttpReply(stream, contentType, "401")
 {
@@ -155,3 +157,5 @@ void ArduinoHttpServer::StreamHttpAuthenticateReply::send()
    getStream().println(AHS_F(""));
    DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
 }
+
+#endif

@@ -57,6 +57,7 @@ void loop()
          // Optionally athenticate incoming request
          if(!httpRequest.authenticate("user", "secret"))
          {
+            // Client did not supply correct credentials. Send request to authenticate itself via autheticate reply.
             ArduinoHttpServer::StreamHttpAuthenticateReply httpReply(client, httpRequest.getContentType());
             httpReply.send();
          }

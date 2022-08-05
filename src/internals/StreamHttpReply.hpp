@@ -63,13 +63,14 @@ protected:
 //                             Class Declaration
 //------------------------------------------------------------------------------
 //! Authenticate reply
+#ifndef ARDUINO_HTTP_SERVER_NO_BASIC_AUTH
 class StreamHttpAuthenticateReply: public AbstractStreamHttpReply
 {
 public:
     StreamHttpAuthenticateReply(Stream& stream, const String& contentType);
     virtual void send();
 };
-
+#endif
 
 //------------------------------------------------------------------------------
 //                             Class Declaration
