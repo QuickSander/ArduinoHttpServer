@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        example: [examples/HelloHttp/HelloHttp.cpp]
+        default_example: [examples/HelloHttp/HelloHttp.cpp]
+        no_flash_no_auth_example: [examples/HelloHttp/HelloHttp.cpp]
 
     steps:
     - uses: actions/checkout@v2
@@ -29,7 +30,14 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install --upgrade platformio
-    - name: Run PlatformIO
+    - name: Run PlatformIO - Default Example
+      run: pio ci --lib="." --project-conf="platformio.ini"
+      env:
+        PLATFORMIO_CI_SRC: ${{ matrix.default_example }}
+    - name: Run PlatformIO - No Auth, No Flash Example 
       run: pio ci --lib="." --project-conf="platformio.ini"
       env:
         PLATFORMIO_CI_SRC: ${{ matrix.example }}
+        PLATFORMIO_BUILD_FLAGS: -D ARDUINO_HTTP_SERVER_NO_FLASH -D ARDUINO_HTTP_SERVER_NO_BASIC_AUTH
+
+
