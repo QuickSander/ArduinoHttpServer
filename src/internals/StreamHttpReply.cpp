@@ -43,6 +43,10 @@ void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const 
    getStream().print( AHS_F("Connection: close\r\n") );
    getStream().print( AHS_F("Content-Length: ") ); getStream().print( data.length()); getStream().print( AHS_F("\r\n") );
    getStream().print( AHS_F("Content-Type: ") ); getStream().print( m_contentType ); getStream().print( AHS_F("\r\n") );
+   for(int i = 0; i < m_headerCount; i++) {
+      getStream().print( m_headerNames[i] ); getStream().print(": "); getStream().print( m_headerValues[i] ); getStream().print( AHS_F("\r\n") );
+   }
+
    getStream().print( AHS_F("\r\n") );
    getStream().print( data ); getStream().print( AHS_F("\r\n") );
 
