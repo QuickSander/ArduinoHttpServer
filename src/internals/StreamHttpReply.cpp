@@ -18,6 +18,10 @@ ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stre
 
 }
 
+void ArduinoHttpServer::AbstractStreamHttpReply::addHeader(const String& name, const String &value) {
+   
+}
+
 //------------------------------------------------------------------------------
 //! \brief Send this reply / print this reply to stream.
 //! \todo: Accept char* also for data coming directly from flash.
@@ -39,7 +43,6 @@ void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const 
 
    DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
 }
-
 
 Stream& ArduinoHttpServer::AbstractStreamHttpReply::getStream()
 {

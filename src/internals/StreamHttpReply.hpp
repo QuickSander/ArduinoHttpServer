@@ -25,6 +25,7 @@ class AbstractStreamHttpReply
 {
 
 public:
+    void addHeader(const String& name, const String &value);
     virtual void send(const String& data, const String& title);
 
 protected:
