@@ -19,7 +19,12 @@ ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stre
 }
 
 void ArduinoHttpServer::AbstractStreamHttpReply::addHeader(const String& name, const String &value) {
-   
+   if (m_headerCount == MAX_HEADERS) return;
+
+   m_headerNames[m_headerCount] = name;
+   m_headerValues[m_headerCount] = value;
+
+   m_headerCount++;
 }
 
 //------------------------------------------------------------------------------
