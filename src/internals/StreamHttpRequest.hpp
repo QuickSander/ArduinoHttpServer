@@ -28,7 +28,7 @@ namespace ArduinoHttpServer
 
 enum class Method : char
 {
-   Invalid, Get, Put, Post, Head, Delete
+   Invalid, Get, Put, Post, Head, Delete, Options
 };
 
 
@@ -240,8 +240,8 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseMethod(char lineB
    if(m_error!=Error::OK) { return; }
 
    // First strtok call, initialize with cached line buffer.
-   // len("DELETE") + 1 for terminating null = 7
-   FixString<7U> token(strtok_r(lineBuffer, " ", &m_lineBufferStrTokContext));
+   // len("OPTIONS") + 1 for terminating null = 7
+   FixString<8U> token(strtok_r(lineBuffer, " ", &m_lineBufferStrTokContext));
 
    if(token == "GET")
    {
@@ -262,6 +262,10 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseMethod(char lineB
    else if (token == "DELETE")
    {
       m_method = Method::Delete;
+   }
+   else if (token == "OPTIONS") 
+   {
+      m_method = Method::Options;
    }
    else
    {
@@ -290,7 +294,6 @@ void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseVersion()
     else
     {
         setError(Error::PARSE_ERROR_INVALID_HTTP_VERSION, version);
-
     }
 
 }
@@ -319,7 +322,7 @@ template <size_t MAX_BODY_SIZE>
 void ArduinoHttpServer::StreamHttpRequest<MAX_BODY_SIZE>::parseField(char lineBuffer[])
 {
    if(m_error!=Error::OK) { return; }
-
+   
    ArduinoHttpServer::HttpField httpField(lineBuffer);
 
    if(httpField.getType() == ArduinoHttpServer::HttpField::Type::CONTENT_TYPE)
