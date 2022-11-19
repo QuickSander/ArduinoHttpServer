@@ -11,8 +11,9 @@
 #define __ArduinoHttpServer__StreamHttpReply__
 
 #include <Arduino.h>
-
 #include "ArduinoHttpServerDebug.h"
+
+#define MAX_HEADERS  3
 
 namespace ArduinoHttpServer
 {
@@ -25,6 +26,7 @@ class AbstractStreamHttpReply
 {
 
 public:
+    void addHeader(const String& name, const String &value);
     virtual void send(const String& data, const String& title);
 
 protected:
@@ -37,7 +39,9 @@ protected:
    constexpr static const char* CONTENT_TYPE_APPLICATION_JSON PROGMEM = "application/json";
 
 private:
-
+    String m_headerNames[MAX_HEADERS];
+    String m_headerValues[MAX_HEADERS];
+    int m_headerCount = 0;
    Stream& m_stream;
    String m_contentType; //!< Needs to be overridden to default when required. Therefore not const.
    const String m_code;
