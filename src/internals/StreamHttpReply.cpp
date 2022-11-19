@@ -18,6 +18,15 @@ ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stre
 
 }
 
+void ArduinoHttpServer::AbstractStreamHttpReply::addHeader(const String& name, const String &value) {
+   if (m_headerCount == MAX_HEADERS) return;
+
+   m_headerNames[m_headerCount] = name;
+   m_headerValues[m_headerCount] = value;
+
+   m_headerCount++;
+}
+
 //------------------------------------------------------------------------------
 //! \brief Send this reply / print this reply to stream.
 //! \todo: Accept char* also for data coming directly from flash.
@@ -34,12 +43,15 @@ void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const 
    getStream().print( AHS_F("Connection: close\r\n") );
    getStream().print( AHS_F("Content-Length: ") ); getStream().print( data.length()); getStream().print( AHS_F("\r\n") );
    getStream().print( AHS_F("Content-Type: ") ); getStream().print( m_contentType ); getStream().print( AHS_F("\r\n") );
+   for(int i = 0; i < m_headerCount; i++) {
+      getStream().print( m_headerNames[i] ); getStream().print(": "); getStream().print( m_headerValues[i] ); getStream().print( AHS_F("\r\n") );
+   }
+
    getStream().print( AHS_F("\r\n") );
    getStream().print( data ); getStream().print( AHS_F("\r\n") );
 
    DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
 }
-
 
 Stream& ArduinoHttpServer::AbstractStreamHttpReply::getStream()
 {
