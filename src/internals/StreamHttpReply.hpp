@@ -25,6 +25,7 @@ class AbstractStreamHttpReply
 {
 
 public:
+    virtual void sendHeader(size_t size);
     virtual void send(const String& data, const String& title);
     virtual void send(const uint8_t* buf, const size_t size);
 
