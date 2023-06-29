@@ -40,6 +40,23 @@ void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const 
    DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
 }
 
+void ArduinoHttpServer::AbstractStreamHttpReply::send(const uint8_t* buf, const size_t size) {
+   // Read away remaining bytes.
+   while(getStream().read()>=0);
+
+   DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
+
+   getStream().print( AHS_F("HTTP/1.1 ") );
+   getStream().print( getCode() + " ");
+   getStream().print( AHS_F("Connection: close\r\n") );
+   getStream().print( AHS_F("Content-Length: ") ); getStream().print(size); getStream().print( AHS_F("\r\n") );
+   getStream().print( AHS_F("Content-Type: ") ); getStream().print( m_contentType ); getStream().print( AHS_F("\r\n") );
+   getStream().print( AHS_F("\r\n") );
+   getStream().write(buf, size);
+
+   DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
+}
+
 
 Stream& ArduinoHttpServer::AbstractStreamHttpReply::getStream()
 {
