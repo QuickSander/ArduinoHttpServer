@@ -17,6 +17,15 @@
 namespace ArduinoHttpServer
 {
 
+class Header
+{
+public:
+   const char* header;
+   Header* next;
+   Header(const char* header);
+   ~Header();
+};
+
 //------------------------------------------------------------------------------
 //                             Class Declaration
 //------------------------------------------------------------------------------
@@ -26,6 +35,8 @@ class AbstractStreamHttpReply
 
 public:
     virtual void send(const String& data, const String& title);
+    virtual void addHeader(const char* header);
+    ~AbstractStreamHttpReply();
 
 protected:
    AbstractStreamHttpReply(Stream& stream, const String& contentType, const String& code);
@@ -42,6 +53,8 @@ private:
    String m_contentType; //!< Needs to be overridden to default when required. Therefore not const.
    const String m_code;
 
+   Header* headers_head;
+   Header* headers_tail;
 };
 
 //------------------------------------------------------------------------------

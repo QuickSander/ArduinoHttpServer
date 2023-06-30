@@ -4,6 +4,16 @@
 
 #include "ArduinoHttpServerDebug.h"
 
+ArduinoHttpServer::Header::Header(const char* header): header(header)
+{
+   next = nullptr;
+}
+ArduinoHttpServer::Header::~Header()
+{
+   delete next;
+   free(this);
+}
+
 //------------------------------------------------------------------------------
 //                             Class Definition
 //------------------------------------------------------------------------------
@@ -15,7 +25,24 @@ ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stre
    m_contentType(contentType),
    m_code(code)
 {
+   headers_head = nullptr;
+   headers_tail = nullptr;
+}
 
+ArduinoHttpServer::AbstractStreamHttpReply::~AbstractStreamHttpReply()
+{
+   delete headers_head;
+}
+
+void ArduinoHttpServer::AbstractStreamHttpReply::addHeader(const char* header) {
+   Header* h = new Header(header);
+   if (headers_tail == nullptr) {
+      headers_tail = h;
+      headers_head = h;
+   } else {
+      headers_tail->next = h;
+      headers_tail = h;
+   }
 }
 
 //------------------------------------------------------------------------------
@@ -34,6 +61,12 @@ void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const 
    getStream().print( AHS_F("Connection: close\r\n") );
    getStream().print( AHS_F("Content-Length: ") ); getStream().print( data.length()); getStream().print( AHS_F("\r\n") );
    getStream().print( AHS_F("Content-Type: ") ); getStream().print( m_contentType ); getStream().print( AHS_F("\r\n") );
+   Header* h = headers_head;
+   while (h != nullptr) {
+      getStream().print(AHS_F(h->header));
+      getStream().print(AHS_F("\r\n"));
+      h = h->next;
+   }
    getStream().print( AHS_F("\r\n") );
    getStream().print( data ); getStream().print( AHS_F("\r\n") );
 
