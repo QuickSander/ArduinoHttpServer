@@ -25,9 +25,9 @@ class AbstractStreamHttpReply
 {
 
 public:
-    virtual void sendHeader(size_t size);
+    virtual void sendHeader(size_t size, const String& title);
     virtual void send(const String& data, const String& title);
-    virtual void send(const uint8_t* buf, const size_t size);
+    virtual void send(const uint8_t* buf, const size_t size, const String& title);
 
 protected:
    AbstractStreamHttpReply(Stream& stream, const String& contentType, const String& code);
@@ -83,7 +83,8 @@ class StreamHttpReply: public AbstractStreamHttpReply
 public:
     StreamHttpReply(Stream& stream, const String& contentType);
     virtual void send(const String& data, const bool gzipencoded=false) { AbstractStreamHttpReply::send(data, "OK"); };
-    virtual void send(const uint8_t *buf, const size_t size) { AbstractStreamHttpReply::send(buf, size); };
+    virtual void send(const uint8_t* buf, const size_t size, const String& title="OK") { AbstractStreamHttpReply::send(buf, size, title); };
+    virtual void sendHeader(size_t size, const String& title="OK") { AbstractStreamHttpReply::sendHeader(size, title); }
 };
 
 

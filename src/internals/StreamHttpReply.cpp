@@ -18,20 +18,25 @@ ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stre
 
 }
 
-void ArduinoHttpServer::AbstractStreamHttpReply::sendHeader(size_t size)
-{
+void ArduinoHttpServer::AbstractStreamHttpReply::sendHeader(
+    size_t size, const String& title) {
    // Read away remaining bytes.
-   while(getStream().read()>=0);
-
-   getStream().print( AHS_F("HTTP/1.1 ") );
-   getStream().print( getCode() + " ");
-   getStream().print( AHS_F("Connection: close\r\n") );
-   if (size > 0)
-   {
-      getStream().print( AHS_F("Content-Length: ") ); getStream().print(size); getStream().print( AHS_F("\r\n") );
+   while (getStream().read() >= 0) {
    }
-   getStream().print( AHS_F("Content-Type: ") ); getStream().print( m_contentType ); getStream().print( AHS_F("\r\n") );
-   getStream().print( AHS_F("\r\n") );
+
+   getStream().print(AHS_F("HTTP/1.1 "));
+   getStream().print(getCode() + " ");
+   getStream().print(title + "\r\n");
+   getStream().print(AHS_F("Connection: keep-alive\r\n"));
+   if (size > 0) {
+      getStream().print(AHS_F("Content-Length: "));
+      getStream().print(size);
+      getStream().print(AHS_F("\r\n"));
+   }
+   getStream().print(AHS_F("Content-Type: "));
+   getStream().print(m_contentType);
+   getStream().print(AHS_F("\r\n"));
+   getStream().print(AHS_F("\r\n"));
 }
 
 //------------------------------------------------------------------------------
@@ -40,14 +45,16 @@ void ArduinoHttpServer::AbstractStreamHttpReply::sendHeader(size_t size)
 void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const String& title)
 {
    DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
-   AbstractStreamHttpReply::sendHeader(data.length());
+   AbstractStreamHttpReply::sendHeader(data.length(), title);
    getStream().print( data ); getStream().print( AHS_F("\r\n") );
    DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
 }
 
-void ArduinoHttpServer::AbstractStreamHttpReply::send(const uint8_t* buf, const size_t size) {
+void ArduinoHttpServer::AbstractStreamHttpReply::send(const uint8_t* buf,
+                                                      const size_t size,
+                                                      const String& title) {
    DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
-   AbstractStreamHttpReply::sendHeader(size);
+   AbstractStreamHttpReply::sendHeader(size, title);
    getStream().write(buf, size);
    DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
 }
