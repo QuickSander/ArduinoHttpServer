@@ -27,7 +27,7 @@ void ArduinoHttpServer::AbstractStreamHttpReply::sendHeader(
    getStream().print(AHS_F("HTTP/1.1 "));
    getStream().print(getCode() + " ");
    getStream().print(title + "\r\n");
-   getStream().print(AHS_F("Connection: keep-alive\r\n"));
+   getStream().print(AHS_F("Connection: close\r\n"));
    if (size > 0) {
       getStream().print(AHS_F("Content-Length: "));
       getStream().print(size);
