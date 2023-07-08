@@ -18,25 +18,44 @@ ArduinoHttpServer::AbstractStreamHttpReply::AbstractStreamHttpReply(Stream& stre
 
 }
 
+void ArduinoHttpServer::AbstractStreamHttpReply::sendHeader(
+    size_t size, const String& title) {
+   // Read away remaining bytes.
+   while (getStream().read() >= 0) {
+   }
+
+   getStream().print(AHS_F("HTTP/1.1 "));
+   getStream().print(getCode() + " ");
+   getStream().print(title + "\r\n");
+   getStream().print(AHS_F("Connection: close\r\n"));
+   if (size > 0) {
+      getStream().print(AHS_F("Content-Length: "));
+      getStream().print(size);
+      getStream().print(AHS_F("\r\n"));
+   }
+   getStream().print(AHS_F("Content-Type: "));
+   getStream().print(m_contentType);
+   getStream().print(AHS_F("\r\n"));
+   getStream().print(AHS_F("\r\n"));
+}
+
 //------------------------------------------------------------------------------
 //! \brief Send this reply / print this reply to stream.
 //! \todo: Accept char* also for data coming directly from flash.
 void ArduinoHttpServer::AbstractStreamHttpReply::send(const String& data, const String& title)
 {
-   // Read away remaining bytes.
-   while(getStream().read()>=0);
-
    DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
-
-   getStream().print( AHS_F("HTTP/1.1 ") );
-   getStream().print( getCode() + " ");
-   getStream().print( title + "\r\n" );
-   getStream().print( AHS_F("Connection: close\r\n") );
-   getStream().print( AHS_F("Content-Length: ") ); getStream().print( data.length()); getStream().print( AHS_F("\r\n") );
-   getStream().print( AHS_F("Content-Type: ") ); getStream().print( m_contentType ); getStream().print( AHS_F("\r\n") );
-   getStream().print( AHS_F("\r\n") );
+   AbstractStreamHttpReply::sendHeader(data.length(), title);
    getStream().print( data ); getStream().print( AHS_F("\r\n") );
+   DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
+}
 
+void ArduinoHttpServer::AbstractStreamHttpReply::send(const uint8_t* buf,
+                                                      const size_t size,
+                                                      const String& title) {
+   DEBUG_ARDUINO_HTTP_SERVER_PRINT("Printing Reply ... ");
+   AbstractStreamHttpReply::sendHeader(size, title);
+   getStream().write(buf, size);
    DEBUG_ARDUINO_HTTP_SERVER_PRINTLN("done.");
 }
 
