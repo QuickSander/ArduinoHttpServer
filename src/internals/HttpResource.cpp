@@ -35,6 +35,30 @@ bool ArduinoHttpServer::HttpResource::isValid()
    return m_resource.length() > 0;
 }
 
+// not a perfect solution, may return incorrect argument if one is a substring (at the start) of another
+String ArduinoHttpServer::HttpResource::getArgument(const char *key) const {
+   int queryStart = m_resource.indexOf('?');
+   if (queryStart == -1) {
+      return "";
+   }
+   
+   queryStart++;
+
+   String keyStr = String(key) + '=';
+   int keyStart = m_resource.indexOf(keyStr, queryStart);
+
+   if (keyStart == -1) {
+      return "";
+   }
+
+   int valueEnd = m_resource.indexOf('&', keyStart);
+   if (valueEnd == -1) {
+      valueEnd = m_resource.length();
+   }
+
+   String value = m_resource.substring(keyStart + keyStr.length(), valueEnd);
+   return value;
+}
 //! Retrieve resource part at the specified index.
 //! \details E.g. HttpResource("/api/sensors/1/state")[1]
 //!    returns "sensors".

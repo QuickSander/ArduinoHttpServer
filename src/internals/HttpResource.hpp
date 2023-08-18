@@ -26,6 +26,7 @@ public:
 
     bool isValid();
     String operator[](const unsigned int index) const;
+    String getArgument(const char *key) const;
     const String& toString() const;
 
 private:
