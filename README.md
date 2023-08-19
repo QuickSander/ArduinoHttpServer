@@ -40,8 +40,8 @@ httpReply.send("{\"All your base are belong to us!\"}");
 Documentation
 -------------
 
-Documentation available in the [ArduinoHttpServer Github wiki](https://github.com/QuickSander/ArduinoHttpServer/wiki)
-Article by P. Kaczmarek: [Arduino R4 WiFi and ArduinoHttpServer - fixes, launch, examples of use](https://www.elektroda.com/rtvforum/topic3996584.html)
+- Documentation available in the [ArduinoHttpServer Github wiki](https://github.com/QuickSander/ArduinoHttpServer/wiki)
+- Article by P. Kaczmarek on Elektroda.com: [Arduino R4 WiFi and ArduinoHttpServer - fixes, launch, examples of use](https://www.elektroda.com/rtvforum/topic3996584.html)
 
 ### Compiler options
 The library can be adjusted to include less or more features depending on the board you use and your desires for hardware usage. Specify these in your project's ```platformio.ini``` via the [```build_flags```](https://docs.platformio.org/en/latest/projectconf/section_env_build.html#build-flags) argument or as ```#define``` in your source/header code before including ```ArduinoHttpServer.h```.
