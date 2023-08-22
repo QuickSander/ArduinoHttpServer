@@ -34,9 +34,8 @@ bool ArduinoHttpServer::HttpResource::isValid()
 {
    return m_resource.length() > 0;
 }
-
 //! Retrieve the GET argument value for given string key
-//! \details E.g. res.getArgument("key") for index.php&key=value
+//! \details E.g. HttpResource("/index.php&key=value").getArgument("key")
 //!    returns "value".
 //! \returns Empty string when index specified is out of range. 
 String ArduinoHttpServer::HttpResource::getArgument(const char *key) const {
@@ -60,9 +59,39 @@ String ArduinoHttpServer::HttpResource::getArgument(const char *key) const {
    if (valueEnd == -1) {
       valueEnd = m_resource.length();
    }
-
-   String value = m_resource.substring(keyStart + keyStr.length(), valueEnd);
-   return value;
+#if 0
+   String ret = m_resource.substring(keyStart + keyStr.length(), valueEnd);
+#else
+	int a, b;
+	String ret = "";
+	for(int i = keyStart + keyStr.length(); i < valueEnd; i++) {
+		if (i < valueEnd-3 && (m_resource[i] == '%') &&
+			((a = m_resource[i+1]) && (b = m_resource[i+2])) &&
+			(isxdigit(a) && isxdigit(b))) {
+			if (a >= 'a')
+				a -= 'a' - 'A';
+			if (a >= 'A')
+				a -= ('A' - 10);
+			else
+				a -= '0';
+			if (b >= 'a')
+				b -= 'a' - 'A';
+			if (b >= 'A')
+				b -= ('A' - 10);
+			else
+				b -= '0';
+			ret += (char)(16 * a + b);
+			i += 2;
+		}
+		else if (m_resource[i] == '+') {
+			ret += ' ';
+		}
+		else {
+			ret += m_resource[i];
+		}
+	}
+#endif
+   return ret;
 }
 //! Retrieve resource part at the specified index.
 //! \details E.g. HttpResource("/api/sensors/1/state")[1]
