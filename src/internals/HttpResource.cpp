@@ -34,7 +34,65 @@ bool ArduinoHttpServer::HttpResource::isValid()
 {
    return m_resource.length() > 0;
 }
+//! Retrieve the GET argument value for given string key
+//! \details E.g. HttpResource("/index.php&key=value").getArgument("key")
+//!    returns "value".
+//! \returns Empty string when index specified is out of range. 
+String ArduinoHttpServer::HttpResource::getArgument(const char *key) const {
+   int queryStart = m_resource.indexOf('?');
+   if (queryStart == -1) {
+      return "";
+   }
+   
+   queryStart++;
 
+	// FIXME: adding = will ensure that = is directly after key name,
+	// but we still may get incorrect values for strings like "akey" vs "key"...
+   String keyStr = String(key) + '=';
+   int keyStart = m_resource.indexOf(keyStr, queryStart);
+
+   if (keyStart == -1) {
+      return "";
+   }
+
+   int valueEnd = m_resource.indexOf('&', keyStart);
+   if (valueEnd == -1) {
+      valueEnd = m_resource.length();
+   }
+#if 0
+   String ret = m_resource.substring(keyStart + keyStr.length(), valueEnd);
+#else
+	int a, b;
+	String ret = "";
+	for(int i = keyStart + keyStr.length(); i < valueEnd; i++) {
+		if (i < valueEnd-3 && (m_resource[i] == '%') &&
+			((a = m_resource[i+1]) && (b = m_resource[i+2])) &&
+			(isxdigit(a) && isxdigit(b))) {
+			if (a >= 'a')
+				a -= 'a' - 'A';
+			if (a >= 'A')
+				a -= ('A' - 10);
+			else
+				a -= '0';
+			if (b >= 'a')
+				b -= 'a' - 'A';
+			if (b >= 'A')
+				b -= ('A' - 10);
+			else
+				b -= '0';
+			ret += (char)(16 * a + b);
+			i += 2;
+		}
+		else if (m_resource[i] == '+') {
+			ret += ' ';
+		}
+		else {
+			ret += m_resource[i];
+		}
+	}
+#endif
+   return ret;
+}
 //! Retrieve resource part at the specified index.
 //! \details E.g. HttpResource("/api/sensors/1/state")[1]
 //!    returns "sensors".
