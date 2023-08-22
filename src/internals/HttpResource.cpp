@@ -35,7 +35,10 @@ bool ArduinoHttpServer::HttpResource::isValid()
    return m_resource.length() > 0;
 }
 
-// not a perfect solution, may return incorrect argument if one is a substring (at the start) of another
+//! Retrieve the GET argument value for given string key
+//! \details E.g. res.getArgument("key") for index.php&key=value
+//!    returns "value".
+//! \returns Empty string when index specified is out of range. 
 String ArduinoHttpServer::HttpResource::getArgument(const char *key) const {
    int queryStart = m_resource.indexOf('?');
    if (queryStart == -1) {
@@ -44,6 +47,8 @@ String ArduinoHttpServer::HttpResource::getArgument(const char *key) const {
    
    queryStart++;
 
+	// FIXME: adding = will ensure that = is directly after key name,
+	// but we still may get incorrect values for strings like "akey" vs "key"...
    String keyStr = String(key) + '=';
    int keyStart = m_resource.indexOf(keyStr, queryStart);
 
